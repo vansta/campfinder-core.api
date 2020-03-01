@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\CampFinder.Models\CampFinder.Models.csproj" />
+    <ProjectReference Include="..\CampFinder.Repositories\CampFinder.Repositories.csproj" />
+    <ProjectReference Include="..\CampFinder.ViewModels\CampFinder.ViewModels.csproj" />
+  </ItemGroup>
+
+</Project>
