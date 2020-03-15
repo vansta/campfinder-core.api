@@ -57,6 +57,13 @@ namespace CampFinder_Core.Api
             {
                 endpoints.MapControllers();
             });
+
+            app.UseForwardedHeaders(new ForwardedHeadersOptions
+            {
+                ForwardedHeaders = Microsoft.AspNetCore.HttpOverrides.ForwardedHeaders.XForwardedFor | Microsoft.AspNetCore.HttpOverrides.ForwardedHeaders.XForwardedProto
+            });
+
+            app.UseAuthentication();
         }
     }
 }
