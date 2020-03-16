@@ -1,7 +1,8 @@
-create database CampFinderDb
+--create database CampFinderDb
+--go
+
+use CampFinderDb
 go
-
-
 
 create table People (
 	Id uniqueidentifier primary key not null,
