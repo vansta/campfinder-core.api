@@ -31,7 +31,9 @@ namespace CampFinder_Core.Api
                 {
                     builder.AllowAnyOrigin()
                     .AllowAnyMethod()
-                    .AllowAnyHeader();
+                    .AllowAnyHeader()
+                    .WithOrigins("http://192.168.1.12:3000")
+                    .Build();
                 });
             });
             services.AddControllers();

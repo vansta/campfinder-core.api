@@ -15,12 +15,12 @@ namespace CampFinder_Core.Api.Controllers
     {
         private readonly TerrainManager manager = new TerrainManager();
 
-        //[EnableCors]
-        //[HttpGet("all")]
-        //public JsonResult GetTerrains()
-        //{
-        //    return Json(manager.GetTerrainViewModels());
-        //}
+        [EnableCors]
+        [HttpGet("all")]
+        public JsonResult GetTerrains()
+        {
+            return Json(manager.GetTerrainViewModels());
+        }
 
         [EnableCors]
         [HttpGet]

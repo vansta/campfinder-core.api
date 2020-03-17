@@ -12,7 +12,7 @@
     "IIS Express": {
       "commandName": "IISExpress",
       "launchBrowser": true,
-      "launchUrl": "campfinder-api",
+      "launchUrl": "api/terrain/all",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
@@ -31,7 +31,9 @@
       "launchBrowser": true
     },
     "Ubuntu_stan": {
-      "commandName": "Executable",
+      "commandName": "Project",
+      "launchBrowser": true,
+      "launchUrl": "api/terrain/all",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Production"
       }

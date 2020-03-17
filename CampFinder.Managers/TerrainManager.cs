@@ -14,16 +14,16 @@ namespace CampFinder.Managers
         private readonly PlaceManager placeManager = new PlaceManager();
         private readonly PersonManager personManager = new PersonManager();
 
-        //public IEnumerable<TerrainOverviewItemViewModel> GetTerrainViewModels()
-        //{
-        //    IEnumerable<Terrain> terrains = repository.GetTerrains();
-        //    List<TerrainOverviewItemViewModel> terrainViewModels = new List<TerrainOverviewItemViewModel>();
-        //    foreach (Terrain terrain in terrains)
-        //    {
-        //        terrainViewModels.Add(MapTerrainToOverViewItemViewModel(terrain));
-        //    }
-        //    return terrainViewModels;
-        //}
+        public IEnumerable<TerrainOverviewItemViewModel> GetTerrainViewModels()
+        {
+            IEnumerable<Terrain> terrains = repository.GetTerrains();
+            List<TerrainOverviewItemViewModel> terrainViewModels = new List<TerrainOverviewItemViewModel>();
+            foreach (Terrain terrain in terrains)
+            {
+                terrainViewModels.Add(MapTerrainToOverViewItemViewModel(terrain));
+            }
+            return terrainViewModels;
+        }
 
         public TerrainViewModel GetTerrainViewModel(Guid Id)
         {
@@ -102,22 +102,29 @@ namespace CampFinder.Managers
 
         private TerrainViewModel MapTerrainToViewModel(Terrain terrain)
         {
-            return new TerrainViewModel
+            if (terrain != null)
             {
-                Id = terrain.Id,
-                Name = terrain.Name,
-                Website = terrain.Website,
-                AmountPersons = terrain.AmountPersons,
-                Forest = terrain.Forest,
-                Area = terrain.Area,
+                return new TerrainViewModel
+                {
+                    Id = terrain.Id,
+                    Name = terrain.Name,
+                    Website = terrain.Website,
+                    AmountPersons = terrain.AmountPersons,
+                    Forest = terrain.Forest,
+                    Area = terrain.Area,
 
-                Water = terrain.Water,
-                Electricity = terrain.Electriciy,
-                Toilets = terrain.Toilets,
+                    Water = terrain.Water,
+                    Electricity = terrain.Electriciy,
+                    Toilets = terrain.Toilets,
 
-                Place = terrain.Place == null ? null : placeManager.MapPlaceToViewModel(terrain.Place),
-                Person = terrain.Person == null ? null : personManager.MapPersonToViewModel(terrain.Person)
-            };
+                    Place = terrain.Place == null ? null : placeManager.MapPlaceToViewModel(terrain.Place),
+                    Person = terrain.Person == null ? null : personManager.MapPersonToViewModel(terrain.Person)
+                };
+            }
+            else
+            {
+                return null;
+            }
         }
 
         private TerrainOverviewItemViewModel MapTerrainToOverViewItemViewModel(Terrain terrain)
