@@ -51,7 +51,7 @@ namespace CampFinder_Core.Api
 
             app.UseRouting();
 
-            app.UseCors();
+            app.UseCors(c => c.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
 
             app.UseAuthorization();
 
