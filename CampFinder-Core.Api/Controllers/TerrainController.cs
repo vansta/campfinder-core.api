@@ -15,14 +15,12 @@ namespace CampFinder_Core.Api.Controllers
     {
         private readonly TerrainManager manager = new TerrainManager();
 
-        [EnableCors]
         [HttpGet("all")]
         public JsonResult GetTerrains()
         {
             return Json(manager.GetTerrainViewModels());
         }
 
-        [EnableCors]
         [HttpGet]
         public JsonResult GetTerrainById(Guid id)
         {
@@ -30,14 +28,12 @@ namespace CampFinder_Core.Api.Controllers
             return Json(terrain);
         }
 
-        [EnableCors]
         [HttpPost]
         public void PostNewTerrain([FromBody] TerrainViewModel terrain)
         {
             manager.PostNewTerrain(terrain);
         }
 
-        [EnableCors]
         [HttpPost("search")]
         public JsonResult PostTerrainSearch([FromBody] TerrainSearchViewModel terrainSearch)
         {

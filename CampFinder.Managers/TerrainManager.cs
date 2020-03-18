@@ -63,7 +63,7 @@ namespace CampFinder.Managers
                 }
                 if (terrainSearch.Electricity)
                 {
-                    terrains = terrains.Where(t => t.Electriciy);
+                    terrains = terrains.Where(t => t.Electricity);
                 }
             }
 
@@ -92,7 +92,7 @@ namespace CampFinder.Managers
                 AmountPersons = terrain.AmountPersons,
                 Forest = terrain.Forest,
                 Area = terrain.Area,
-                Electriciy = terrain.Electricity,
+                Electricity = terrain.Electricity,
                 Water = terrain.Water,
                 Toilets = terrain.Toilets,
                 Place = terrain.Place == null ? null : placeManager.MapViewModelToPlace(terrain.Place),
@@ -114,7 +114,7 @@ namespace CampFinder.Managers
                     Area = terrain.Area,
 
                     Water = terrain.Water,
-                    Electricity = terrain.Electriciy,
+                    Electricity = terrain.Electricity,
                     Toilets = terrain.Toilets,
 
                     Place = terrain.Place == null ? null : placeManager.MapPlaceToViewModel(terrain.Place),
