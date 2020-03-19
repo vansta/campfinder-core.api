@@ -10,6 +10,7 @@ using CampFinder.ViewModels;
 
 namespace CampFinder_Core.Api.Controllers
 {
+    [Produces("application/json")]
     [Route("api/terrain")]
     public class TerrainController : Controller
     {
