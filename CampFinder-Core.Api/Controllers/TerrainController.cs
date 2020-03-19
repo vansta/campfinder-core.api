@@ -20,6 +20,11 @@ namespace CampFinder_Core.Api.Controllers
         {
             return Json(manager.GetTerrainViewModels());
         }
+        [HttpGet("test")]
+        public JsonResult Test()
+        {
+            return Json(new TerrainOverviewItemViewModel {Name= "test", AmountPersons = 34 });
+        }
 
         [HttpGet]
         public JsonResult GetTerrainById(Guid id)
