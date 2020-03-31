@@ -7,6 +7,7 @@ using CampFinder.Models;
 using CampFinder.Managers;
 using Microsoft.AspNetCore.Cors;
 using CampFinder.ViewModels;
+using Serilog;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -24,26 +25,29 @@ namespace CampFinder_Core.Api.Controllers
         //    return Json(manager.GetBuildingOverview());
         //}
 
-        [EnableCors]
+        
         [HttpGet]
         public JsonResult GetBuildingById(Guid id)
         {
+            Log.Information($"Get building {id.ToString()}");
             BuildingViewModel building = manager.GetBuildingViewModel(id);
             return Json(building);
         }
 
-        [EnableCors]
+        
         [HttpPost]
         public void PostNewBuilding([FromBody] BuildingViewModel building)
         {
+            Log.Information("building posted");
             manager.PostNewBuilding(building);
         }
 
-        [EnableCors]
+        
         [HttpPost]
         [Route("search")]
         public JsonResult PostBuildingSearch([FromBody] BuildingSearchViewModel building)
         {
+            Log.Information("building search");
             return Json(manager.PostBuildingSearch(building));
         }
     }

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
@@ -10,6 +11,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Serilog;
 
 namespace CampFinder_Core.Api
 {
@@ -25,17 +27,7 @@ namespace CampFinder_Core.Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddCors(options =>
-            {
-                options.AddDefaultPolicy(builder =>
-                {
-                    builder.AllowAnyOrigin()
-                    .AllowAnyMethod()
-                    .AllowAnyHeader()
-                    .WithOrigins("http://192.168.1.12:3000")
-                    .Build();
-                });
-            });
+            services.AddCors();
             services.AddControllers();
         }
 
@@ -66,6 +58,12 @@ namespace CampFinder_Core.Api
             });
 
             app.UseAuthentication();
+
+            var log = new LoggerConfiguration()
+                //.WriteTo.File($"D:/Stan/Projecten/CampFinder/Logs/Campfinder-Api-{DateTime.Today.ToString("yyyyMMdd")}.txt")
+                .WriteTo.File(Path.Combine(Configuration.GetSection("LogFilePath").Value, $"Campfinder-Api-{DateTime.Today.ToString("yyyyMMdd")}.txt"))
+                .CreateLogger();
+            Log.Logger = log;
         }
     }
 }
