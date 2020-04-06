@@ -23,12 +23,6 @@ namespace CampFinder_Core.Api.Controllers
             Log.Information("Get all terrains");
             return Json(manager.GetTerrainViewModels());
         }
-        [HttpGet("test")]
-        public JsonResult Test()
-        {
-            Log.Information("test terrain");
-            return Json(new TerrainOverviewItemViewModel {Name= "test", AmountPersons = 34 });
-        }
 
         [HttpGet]
         public JsonResult GetTerrainById(Guid id)
@@ -41,14 +35,14 @@ namespace CampFinder_Core.Api.Controllers
         [HttpPost]
         public void PostNewTerrain([FromBody] TerrainViewModel terrain)
         {
-            Log.Information("terrain posted");
+            Log.Information($"terrain posted: {terrain}");
             manager.PostNewTerrain(terrain);
         }
 
         [HttpPost("search")]
         public JsonResult PostTerrainSearch([FromBody] TerrainSearchViewModel terrainSearch)
         {
-            Log.Information("terrain search");
+            Log.Information($"terrain search: {terrainSearch}");
             return Json(manager.GetTerrainsForSearch(terrainSearch));
         }
     }

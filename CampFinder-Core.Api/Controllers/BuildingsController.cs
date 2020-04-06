@@ -38,7 +38,7 @@ namespace CampFinder_Core.Api.Controllers
         [HttpPost]
         public void PostNewBuilding([FromBody] BuildingViewModel building)
         {
-            Log.Information("building posted");
+            Log.Information($"building posted: {building}");
             manager.PostNewBuilding(building);
         }
 
@@ -47,7 +47,7 @@ namespace CampFinder_Core.Api.Controllers
         [Route("search")]
         public JsonResult PostBuildingSearch([FromBody] BuildingSearchViewModel building)
         {
-            Log.Information("building search");
+            Log.Information($"building search: {building}");
             if (building != null)
                 return Json(manager.PostBuildingSearch(building));
             else
