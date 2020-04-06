@@ -6,7 +6,7 @@ namespace CampFinder.ViewModels
 {
     public class PlaceViewModel
     {
-        public int HouseNumber { get; set; }
+        public string HouseNumber { get; set; }
         public string Street { get; set; }
         public string City { get; set; }
         public string PostNumber { get; set; }
