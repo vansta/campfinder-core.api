@@ -18,16 +18,16 @@ namespace CampFinder.Managers
         {
             return repository.GetBuildings();
         }
-        //public IEnumerable<BuildingOverviewItemViewModel> GetBuildingOverview()
-        //{
-        //    IEnumerable<Building> Buildings = repository.GetBuildings();
-        //    List<BuildingOverviewItemViewModel> BuildingOverview = new List<BuildingOverviewItemViewModel>();
-        //    foreach (Building building in Buildings)
-        //    {
-        //        BuildingOverview.Add(MapBuildingToOverViewItemViewModel(building));
-        //    }
-        //    return BuildingOverview;
-        //}
+        public IEnumerable<BuildingOverviewItemViewModel> GetBuildingOverview()
+        {
+            IEnumerable<Building> Buildings = repository.GetBuildings();
+            List<BuildingOverviewItemViewModel> BuildingOverview = new List<BuildingOverviewItemViewModel>();
+            foreach (Building building in Buildings)
+            {
+                BuildingOverview.Add(MapBuildingToOverViewItemViewModel(building));
+            }
+            return BuildingOverview;
+        }
 
         public void PostNewBuilding(BuildingViewModel buildingViewModel)
         {
@@ -46,9 +46,9 @@ namespace CampFinder.Managers
                 {
                     buildings = buildings.Where(b => b.Name == buildingSearch.Name);
                 }
-                if (buildingSearch.AmountPersons != null)
+                if (buildingSearch.AmountPersons != null && int.TryParse(buildingSearch.AmountPersons, out int amountPersons))
                 {
-                    buildings = buildings.Where(b => b.AmountPersons >= buildingSearch.AmountPersons);
+                    buildings = buildings.Where(b => b.AmountPersons >= amountPersons);
                 }
                 if (buildingSearch.Province != null && buildingSearch.Province.Count() > 0)
                 {
@@ -78,6 +78,18 @@ namespace CampFinder.Managers
             }
             return filteredBuildings;
         }
+
+        public object GetAllBuildings()
+        {
+            List<BuildingOverviewItemViewModel> buildingViewModels = new List<BuildingOverviewItemViewModel>();
+            IQueryable<Building> buildings  =  repository.GetBuildings();
+            foreach(Building building in buildings)
+            {
+                buildingViewModels.Add(MapBuildingToOverViewItemViewModel(building));
+            }
+            return buildingViewModels;
+        }
+
         public BuildingViewModel GetBuildingViewModel(Guid Id)
         {
             Building building = repository.GetBuilding(Id);

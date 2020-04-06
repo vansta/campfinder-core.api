@@ -48,7 +48,10 @@ namespace CampFinder_Core.Api.Controllers
         public JsonResult PostBuildingSearch([FromBody] BuildingSearchViewModel building)
         {
             Log.Information("building search");
-            return Json(manager.PostBuildingSearch(building));
+            if (building != null)
+                return Json(manager.PostBuildingSearch(building));
+            else
+                return Json(manager.GetBuildingOverview());
         }
     }
 }

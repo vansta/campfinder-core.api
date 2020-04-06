@@ -41,9 +41,9 @@ namespace CampFinder.Managers
                 {
                     terrains = terrains.Where(t => t.Name == terrainSearch.Name);
                 }
-                if (terrainSearch.AmountPersons != null)
+                if (terrainSearch.AmountPersons != null && int.TryParse(terrainSearch.AmountPersons, out int amountPersons))
                 {
-                    terrains = terrains.Where(t => t.AmountPersons >= terrainSearch.AmountPersons);
+                    terrains = terrains.Where(t => t.AmountPersons >= amountPersons);
                 }
                 if (terrainSearch.Province != null && terrainSearch.Province.Count() > 0)
                 {
