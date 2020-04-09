@@ -5,10 +5,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="9.0.0" />
+    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="7.0.0" />
     <PackageReference Include="Serilog.Sinks.File" Version="4.1.0" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\AutoMapperConfiguration\CampFinder.AutoMapperConfiguration.csproj" />
     <ProjectReference Include="..\CampFinder.Models\CampFinder.Models.csproj" />
     <ProjectReference Include="..\CampFinder.Repositories\CampFinder.Repositories.csproj" />
     <ProjectReference Include="..\CampFinder.ViewModels\CampFinder.ViewModels.csproj" />
