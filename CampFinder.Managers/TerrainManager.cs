@@ -12,16 +12,13 @@ namespace CampFinder.Managers
     {
         private readonly CampPlaceRepository repository = new CampPlaceRepository();
 
-        private readonly PlaceManager placeManager = new PlaceManager();
-        private readonly PersonManager personManager = new PersonManager();
-
         public IEnumerable<TerrainOverviewItemViewModel> GetTerrainViewModels()
         {
             IEnumerable<Terrain> terrains = repository.GetTerrains();
             List<TerrainOverviewItemViewModel> terrainViewModels = new List<TerrainOverviewItemViewModel>();
             foreach (Terrain terrain in terrains)
             {
-                terrainViewModels.Add(MapTerrainToOverViewItemViewModel(terrain));
+                terrainViewModels.Add(new MapperService<TerrainOverviewItemViewModel>().Map(terrain));
             }
             return terrainViewModels;
         }
@@ -70,7 +67,7 @@ namespace CampFinder.Managers
 
             foreach (Terrain terrain in terrains)
             {
-                filteredTerrains.Add(MapTerrainToOverViewItemViewModel(terrain));
+                filteredTerrains.Add(new MapperService<TerrainOverviewItemViewModel>().Map(terrain));
             }
             return filteredTerrains;
         }
@@ -86,77 +83,17 @@ namespace CampFinder.Managers
         private Terrain MapViewModelToTerrain(TerrainViewModel terrainViewModel)
         {
             Terrain terrain = new MapperService<Terrain>().Map(terrainViewModel);
-            //terrain.Person = terrain.Person == null ? null : personManager.MapViewModelToPerson(terrainViewModel.Person);
-            //terrain.Place = terrain.Place == null ? null : placeManager.MapViewModelToPlace(terrainViewModel.Place);
-
             terrain.Person = terrainViewModel.Person == null ? null : new MapperService<Person>().Map(terrainViewModel.Person);
             terrain.Place = terrainViewModel.Place == null ? null : new MapperService<Place>().Map(terrainViewModel.Place);
             return terrain;
-
-            //return new Terrain
-            //{
-            //    Id = Guid.NewGuid(),
-            //    Name = terrain.Name,
-            //    Website = terrain.Website,
-            //    AmountPersons = int.Parse(terrain.AmountPersons),
-            //    Forest = terrain.Forest,
-            //    Area = double.Parse(terrain.Area),
-            //    Electricity = terrain.Electricity,
-            //    Water = terrain.Water,
-            //    Toilets = terrain.Toilets,
-            //    Place = terrain.Place == null ? null : placeManager.MapViewModelToPlace(terrain.Place),
-            //    Person = terrain.Person == null ? null : personManager.MapViewModelToPerson(terrain.Person)
-            //};
         }
 
         private TerrainViewModel MapTerrainToViewModel(Terrain terrain)
         {
             TerrainViewModel terrainViewModel = new MapperService<TerrainViewModel>().Map(terrain);
-            //terrainViewModel.Place = terrain.Place == null ? null : placeManager.MapPlaceToViewModel(terrain.Place);
-            //terrainViewModel.Person = terrain.Person == null ? null : personManager.MapPersonToViewModel(terrain.Person);
-
             terrainViewModel.Person = terrain.Person == null ? null : new MapperService<PersonViewModel>().Map(terrain.Person);
             terrainViewModel.Place = terrain.Place == null ? null : new MapperService<PlaceViewModel>().Map(terrain.Place);
             return terrainViewModel;
-
-            //if (terrain != null)
-            //{
-            //    return new TerrainViewModel
-            //    {
-            //        Id = terrain.Id,
-            //        Name = terrain.Name,
-            //        Website = terrain.Website,
-            //        AmountPersons = terrain.AmountPersons.ToString(),
-            //        Forest = terrain.Forest,
-            //        Area = terrain.Area.ToString(),
-
-            //        Water = terrain.Water,
-            //        Electricity = terrain.Electricity,
-            //        Toilets = terrain.Toilets,
-
-            //        Place = terrain.Place == null ? null : placeManager.MapPlaceToViewModel(terrain.Place),
-            //        Person = terrain.Person == null ? null : personManager.MapPersonToViewModel(terrain.Person)
-            //    };
-            //}
-            //else
-            //{
-            //    return null;
-            //}
-        }
-
-        private TerrainOverviewItemViewModel MapTerrainToOverViewItemViewModel(Terrain terrain)
-        {
-            return new MapperService<TerrainOverviewItemViewModel>().Map(terrain);
-            //return new TerrainOverviewItemViewModel
-            //{
-            //    Id = terrain.Id,
-            //    Name = terrain.Name,
-            //    Water = terrain.Water,
-            //    AmountPersons = terrain.AmountPersons,
-            //    Website = terrain.Website,
-            //    Area = terrain.Area,
-            //    City = terrain.Place.City
-            //};
         }
 
         #endregion Mapper

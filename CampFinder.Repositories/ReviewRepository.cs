@@ -18,6 +18,7 @@ namespace CampFinder.Repositories
         public void PostnewReview(Review review)
         {
             context.Reviews.Add(review);
+            context.SaveChanges();
         }
     }
 }

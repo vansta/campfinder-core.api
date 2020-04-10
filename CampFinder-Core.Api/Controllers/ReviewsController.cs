@@ -24,10 +24,10 @@ namespace CampFinder_Core.Api.Controllers
         }
 
         [HttpPost]
-        public void PostnewReview([FromBody] ReviewViewModel review)
+        public JsonResult PostnewReview([FromBody] ReviewViewModel review)
         {
             Log.Information($"Post review");
-            manager.PostNewReview(review);
+            return Json(manager.PostNewReview(review));
         }
     }
 }

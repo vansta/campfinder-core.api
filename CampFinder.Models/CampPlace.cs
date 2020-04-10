@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Linq;
 using System.Text;
 
 namespace CampFinder.Models
@@ -19,5 +20,17 @@ namespace CampFinder.Models
         [ForeignKey("Place_Id")]
         public virtual Place Place { get; set; }
         public virtual ICollection<Review> Reviews { get; set; }
+
+        public double GetAverageScore()
+        {
+            if (Reviews.Count == 0)
+            {
+                return 0;
+            }
+            else
+            {
+                return Reviews.Select(r => r.Score).Average();
+            }                       
+        }
     }
 }

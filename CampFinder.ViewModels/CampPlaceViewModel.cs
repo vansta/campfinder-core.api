@@ -16,5 +16,7 @@ namespace CampFinder.ViewModels
         public PersonViewModel Person { get; set; }
         public PlaceViewModel Place { get; set; }
         public ICollection<ReviewViewModel> Reviews { get; set; }
+
+        public double AverageScore { get; set; }
     }
 }

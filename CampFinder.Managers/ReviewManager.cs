@@ -18,10 +18,11 @@ namespace CampFinder.Managers
             return reviewViewModels;
         }
 
-        public void PostNewReview(ReviewViewModel reviewViewModel)
+        public ReviewViewModel PostNewReview(ReviewViewModel reviewViewModel)
         {
             Review review = new MapperService<Review>().Map(reviewViewModel);
             repository.PostnewReview(review);
+            return new MapperService<ReviewViewModel>().Map(review);
         }
     }
 }

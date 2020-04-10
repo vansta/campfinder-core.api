@@ -12,9 +12,6 @@ namespace CampFinder.Managers
     {
         private readonly CampPlaceRepository repository = new CampPlaceRepository();
 
-        private readonly PlaceManager placeManager = new PlaceManager();
-        private readonly PersonManager personManager = new PersonManager();
-
         public IEnumerable<Building> GetBuildings()
         {
             return repository.GetBuildings();
@@ -25,7 +22,7 @@ namespace CampFinder.Managers
             List<BuildingOverviewItemViewModel> BuildingOverview = new List<BuildingOverviewItemViewModel>();
             foreach (Building building in Buildings)
             {
-                BuildingOverview.Add(MapBuildingToOverViewItemViewModel(building));
+                BuildingOverview.Add(new MapperService<BuildingOverviewItemViewModel>().Map(building));
             }
             return BuildingOverview;
         }
@@ -75,20 +72,9 @@ namespace CampFinder.Managers
 
             foreach (Building building in buildings)
             {
-                filteredBuildings.Add(MapBuildingToOverViewItemViewModel(building));
+                filteredBuildings.Add(new MapperService<BuildingOverviewItemViewModel>().Map(building));
             }
             return filteredBuildings;
-        }
-
-        public object GetAllBuildings()
-        {
-            List<BuildingOverviewItemViewModel> buildingViewModels = new List<BuildingOverviewItemViewModel>();
-            IQueryable<Building> buildings  =  repository.GetBuildings();
-            foreach(Building building in buildings)
-            {
-                buildingViewModels.Add(MapBuildingToOverViewItemViewModel(building));
-            }
-            return buildingViewModels;
         }
 
         public BuildingViewModel GetBuildingViewModel(Guid Id)
@@ -103,69 +89,17 @@ namespace CampFinder.Managers
         private Building MapViewModelToBuilding(BuildingViewModel buildingViewModel)
         {
             Building building = new MapperService<Building>().Map(buildingViewModel);
-            //building.Person = buildingViewModel.Person == null ? null : personManager.MapViewModelToPerson(buildingViewModel.Person);
-            //building.Place = buildingViewModel.Place == null ? null : placeManager.MapViewModelToPlace(buildingViewModel.Place);
-
             building.Person = buildingViewModel.Person == null ? null : new MapperService<Person>().Map(building.Person);
             building.Place = buildingViewModel.Place == null ? null : new MapperService<Place>().Map(building.Place);
             return building;
-
-            //return new Building
-            //{
-            //    Id = Guid.NewGuid(),
-            //    Name = buildingViewModel.Name,
-            //    Website = buildingViewModel.Website,
-            //    AmountPersons = int.Parse(buildingViewModel.AmountPersons),
-            //    Forest = buildingViewModel.Forest,
-            //    Area = double.Parse(buildingViewModel.Area),
-            //    Dormitories = int.Parse(buildingViewModel.Dormitories),
-            //    DaySpaces = int.Parse(buildingViewModel.DaySpaces),
-            //    KitchenGear = buildingViewModel.KitchenGear,
-            //    Beds = buildingViewModel.Beds,
-            //    Person = buildingViewModel.Person == null ? null : personManager.MapViewModelToPerson(buildingViewModel.Person),
-            //    Place = buildingViewModel.Place == null ? null : placeManager.MapViewModelToPlace(buildingViewModel.Place)
-            //};
         }
 
         private BuildingViewModel MapBuildingToViewModel(Building building)
         {
             BuildingViewModel buildingViewModel = new MapperService<BuildingViewModel>().Map(building);
-            //buildingViewModel.Person = building.Person == null ? null : personManager.MapPersonToViewModel(building.Person);
-            //buildingViewModel.Place = building.Place == null ? null : placeManager.MapPlaceToViewModel(building.Place);
-
             buildingViewModel.Person = building.Person == null ? null : new MapperService<PersonViewModel>().Map(building.Person);
             buildingViewModel.Place = building.Place == null ? null : new MapperService<PlaceViewModel>().Map(building.Place);
             return buildingViewModel;
-
-        //    return new BuildingViewModel
-        //    {
-        //        Id = building.Id,
-        //        Name = building.Name,
-        //        Website = building.Website,
-        //        Dormitories = building.Dormitories.ToString(),
-        //        AmountPersons = building.AmountPersons.ToString(),
-        //        Forest = building.Forest,
-        //        Area = building.Area.ToString(),
-        //        KitchenGear = building.KitchenGear,
-        //        Beds = building.Beds,
-        //        DaySpaces = building.DaySpaces.ToString(),
-        //        Place = building.Place == null ? null : placeManager.MapPlaceToViewModel(building.Place),
-        //        Person = building.Person == null ? null : personManager.MapPersonToViewModel(building.Person)
-        //    };
-        }
-
-        private BuildingOverviewItemViewModel MapBuildingToOverViewItemViewModel(Building building)
-        {
-            return new MapperService<BuildingOverviewItemViewModel>().Map(building);
-            //return new BuildingOverviewItemViewModel
-            //{
-            //    Id = building.Id,
-            //    Name = building.Name,
-            //    Dormitories = building.Dormitories,
-            //    AmountPersons = building.AmountPersons,
-            //    City = building.Place.City,
-            //    Website = building.Website
-            //};
         }
 
         #endregion Mappers

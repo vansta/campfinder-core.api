@@ -11,11 +11,11 @@ namespace CampFinder.Repositories
         private readonly CampFinderDbContext context = new CampFinderDbContext();
         public IQueryable<Building> GetBuildings()
         {
-            return context.Buildings.Include("Place");
+            return context.Buildings.Include(nameof(Building.Place)).Include(nameof(Building.Reviews));
         }
         public Building GetBuilding(Guid? id)
         {
-            return context.Buildings.Include(t => t.Person).Include(t => t.Place).SingleOrDefault(t => t.Id == id);
+            return context.Buildings.Include(t => t.Person).Include(t => t.Place).Include(t => t.Reviews).SingleOrDefault(t => t.Id == id);
         }
         public void Dispose()
         {
@@ -23,11 +23,11 @@ namespace CampFinder.Repositories
         }
         public IQueryable<Terrain> GetTerrains()
         {
-            return context.Terrains.Include("Place");
+            return context.Terrains.Include("Place").Include("Reviews");
         }
         public Terrain GetTerrain(Guid? id)
         {
-            return context.Terrains.Include(t => t.Person).Include(t => t.Place).SingleOrDefault(t => t.Id == id);
+            return context.Terrains.Include(t => t.Person).Include(t => t.Place).Include(t => t.Reviews).SingleOrDefault(t => t.Id == id);
         }
 
         public void PostNewTerrain(Terrain terrain)

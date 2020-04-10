@@ -4,7 +4,7 @@ using System.Text;
 
 namespace CampFinder.ViewModels
 {
-    public class TerrainOverviewItemViewModel
+    public abstract class OverviewItemViewModel
     {
         public Guid Id { get; set; }
         public string Name { get; set; }
@@ -12,6 +12,7 @@ namespace CampFinder.ViewModels
         public int AmountPersons { get; set; }
         public string City { get; set; }
         public string Website { get; set; }
-        public bool Water { get; set; }
+
+        public double AverageScore { get; set; }
     }
 }
