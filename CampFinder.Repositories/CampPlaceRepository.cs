@@ -9,45 +9,28 @@ namespace CampFinder.Repositories
     public class CampPlaceRepository
     {
         private readonly CampFinderDbContext context = new CampFinderDbContext();
-        public IQueryable<Building> GetBuildings()
-        {
-            return context.Buildings.Include(nameof(Building.Place)).Include(nameof(Building.Reviews));
-        }
-        public Building GetBuilding(Guid? id)
-        {
-            return context.Buildings.Include(t => t.Person).Include(t => t.Place).Include(t => t.Reviews).SingleOrDefault(t => t.Id == id);
-        }
+
         public void Dispose()
         {
             context.Dispose();
         }
-        public IQueryable<Terrain> GetTerrains()
+
+        public IQueryable<T> Get<T>() where T:CampPlace
         {
-            return context.Terrains.Include("Place").Include("Reviews");
-        }
-        public Terrain GetTerrain(Guid? id)
-        {
-            return context.Terrains.Include(t => t.Person).Include(t => t.Place).Include(t => t.Reviews).SingleOrDefault(t => t.Id == id);
+            return context.Set<T>().Include(c => c.Place).Include(c => c.Reviews);
         }
 
-        public void PostNewTerrain(Terrain terrain)
+        public T GetById<T>(Guid id) where T : CampPlace
         {
-            CampFinderDbContext dbContext = new CampFinderDbContext();
-            using (var transaction = dbContext.Database.BeginTransaction())
-            {
-                context.Terrains.Add(terrain);
-                context.SaveChangesAsync();
-            }
+            return context.Set<T>().Include(c => c.Person).Include(c => c.Place).Include(c => c.Reviews).Single(c => c.Id == id);
         }
 
-        public void PostNewBuilding(Building building)
+        public void PostNew<T>(T campPlace) where T : CampPlace
         {
             CampFinderDbContext dbContext = new CampFinderDbContext();
-            using (var transaction = dbContext.Database.BeginTransaction())
-            {
-                context.Buildings.Add(building);
-                context.SaveChangesAsync();
-            }
+            using var transaction = dbContext.Database.BeginTransactionAsync();
+            context.Set<T>().Add(campPlace);
+            context.SaveChangesAsync();
         }
     }
 }

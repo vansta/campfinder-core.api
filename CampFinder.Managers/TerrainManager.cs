@@ -8,13 +8,13 @@ using CampFinder.ViewModels;
 
 namespace CampFinder.Managers
 {
-    public class TerrainManager
+    public class TerrainManager: CampPlaceManager<Terrain>
     {
         private readonly CampPlaceRepository repository = new CampPlaceRepository();
 
         public IEnumerable<TerrainOverviewItemViewModel> GetTerrainViewModels()
         {
-            IEnumerable<Terrain> terrains = repository.GetTerrains();
+            IEnumerable<Terrain> terrains = repository.Get<Terrain>();
             List<TerrainOverviewItemViewModel> terrainViewModels = new List<TerrainOverviewItemViewModel>();
             foreach (Terrain terrain in terrains)
             {
@@ -25,32 +25,20 @@ namespace CampFinder.Managers
 
         public TerrainViewModel GetTerrainViewModel(Guid Id)
         {
-            Terrain terrain = repository.GetTerrain(Id);
-            return MapTerrainToViewModel(terrain);
+            Terrain terrain = repository.GetById<Terrain>(Id);
+            return MapModelToViewModel<TerrainViewModel>(terrain);
         }
 
         public IEnumerable<TerrainOverviewItemViewModel> GetTerrainsForSearch(TerrainSearchViewModel terrainSearch)
         {
             List<TerrainOverviewItemViewModel> filteredTerrains = new List<TerrainOverviewItemViewModel>();
-            IQueryable<Terrain> terrains = repository.GetTerrains();
+
+            IQueryable<Terrain> terrains = new List<Terrain>().AsQueryable();
+
             if (terrainSearch != null)
             {
-                if (!string.IsNullOrEmpty(terrainSearch.Name))
-                {
-                    terrains = terrains.Where(t => t.Name == terrainSearch.Name);
-                }
-                if (terrainSearch.AmountPersons != null && int.TryParse(terrainSearch.AmountPersons, out int amountPersons))
-                {
-                    terrains = terrains.Where(t => t.AmountPersons >= amountPersons);
-                }
-                if (terrainSearch.Province != null && terrainSearch.Province.Count() > 0)
-                {
-                    terrains = terrains.Where(t => terrainSearch.Province.Any(p => p == t.Place.Province));
-                }
-                if (terrainSearch.Foreign)
-                {
-                    terrains = terrains.Where(t => t.Place.Country.ToUpper() == "BELGIE");
-                }
+                terrains = GetSearch(terrainSearch);
+
                 if (terrainSearch.Forest)
                 {
                     terrains = terrains.Where(t => t.Forest);
@@ -74,8 +62,8 @@ namespace CampFinder.Managers
 
         public void PostNewTerrain(TerrainViewModel terrainViewModel)
         {
-            Terrain terrain = MapViewModelToTerrain(terrainViewModel);
-            repository.PostNewTerrain(terrain);
+            Terrain terrain = MapViewModelToModel(terrainViewModel);
+            repository.PostNew(terrain);
         }
 
         #region Mapper
