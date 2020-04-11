@@ -39,9 +39,9 @@ namespace CampFinder.Managers
             {
                 terrains = GetSearch(terrainSearch);
 
-                if (terrainSearch.Forest)
+                if (terrainSearch.Toilets)
                 {
-                    terrains = terrains.Where(t => t.Forest);
+                    terrains = terrains.Where(t => t.Toilets);
                 }
                 if (terrainSearch.Water)
                 {

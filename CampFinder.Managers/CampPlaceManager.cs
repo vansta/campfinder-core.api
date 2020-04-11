@@ -12,7 +12,8 @@ namespace CampFinder.Managers
     public abstract class CampPlaceManager<DomainModel> where DomainModel : CampPlace
     {
         private readonly CampPlaceRepository repository = new CampPlaceRepository();
-        public IQueryable<DomainModel> GetSearch(SearchViewModel searchModel)
+
+        internal IQueryable<DomainModel> GetSearch(SearchViewModel searchModel)
         {
             IQueryable<DomainModel> models = repository.Get<DomainModel>();
 
@@ -28,7 +29,7 @@ namespace CampFinder.Managers
                 }
                 if (searchModel.Province != null && searchModel.Province.Count() > 0)
                 {
-                    models = models.Where(b => searchModel.Province.Any(p => p == b.Place.Province));
+                    models = models.Where(b => searchModel.Province.Any(p => p.Trim().ToUpper() == b.Place.Province.Trim().ToUpper()));
                 }
                 if (searchModel.Forest)
                 {
@@ -36,7 +37,7 @@ namespace CampFinder.Managers
                 }
                 if (searchModel.Foreign)
                 {
-                    models = models.Where(b => b.Place.Country.ToUpper() == "BELGIE");
+                    models = models.Where(b => !b.Place.Country.Trim().ToUpper().Contains("BELGI"));
                 }
             }
             return models;
