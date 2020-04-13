@@ -15,8 +15,7 @@ namespace CampFinder.AutoMapperConfiguration
                 .ForMember(dest => dest.AmountPersons, opt => opt.MapFrom(src =>src.AmountPersons.ToString()))
                 .ForMember(dest => dest.Area, opt => opt.MapFrom(src => src.Area.ToString()))
                 .ForMember(dest => dest.Place, opt => opt.Ignore())
-                .ForMember(dest => dest.Person, opt => opt.Ignore())
-                .ForMember(dest => dest.AverageScore, opt => opt.MapFrom(src => src.GetAverageScore()));
+                .ForMember(dest => dest.Person, opt => opt.Ignore());
 
             CreateMap<TerrainViewModel, Terrain>()
                 .ForMember(dest => dest.Id, opt => opt.MapFrom(src => Guid.NewGuid()))
@@ -26,8 +25,7 @@ namespace CampFinder.AutoMapperConfiguration
                 .ForMember(dest => dest.Person, opt => opt.Ignore());
 
             CreateMap<Terrain, TerrainOverviewItemViewModel>()
-                .ForMember(dest => dest.City, opt => opt.MapFrom(src => src.Place.City))
-                .ForMember(dest => dest.AverageScore, opt => opt.MapFrom(src => src.GetAverageScore()));
+                .ForMember(dest => dest.City, opt => opt.MapFrom(src => src.Place.City));
         }
     }
 }
