@@ -12,5 +12,8 @@ namespace CampFinder.ViewModels
         public string PostNumber { get; set; }
         public string Province { get; set; }
         public string Country { get; set; }
+
+        public double Accessibility { get; set; }
+        public string AccessibilityNote { get; set; }
     }
 }

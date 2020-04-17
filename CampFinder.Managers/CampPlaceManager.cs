@@ -39,6 +39,10 @@ namespace CampFinder.Managers
                 {
                     models = models.Where(b => !b.Place.Country.Trim().ToUpper().Contains("BELGI"));
                 }
+                if (searchModel.Accessibility > 0)
+                {
+                    models = models.Where(b => b.Place.Accessibility <= searchModel.Accessibility);
+                }
             }
             return models;
         }

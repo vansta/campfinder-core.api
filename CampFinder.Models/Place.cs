@@ -14,5 +14,7 @@ namespace CampFinder.Models
         public string Province { get; set; }
         public string Country { get; set; }
 
+        public double Accessibility { get; set; }
+        public string AccessibilityNote { get; set; }
     }
 }
