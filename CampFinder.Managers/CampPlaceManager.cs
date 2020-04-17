@@ -29,7 +29,7 @@ namespace CampFinder.Managers
                 }
                 if (searchModel.Province != null && searchModel.Province.Count() > 0)
                 {
-                    models = models.Where(b => searchModel.Province.Any(p => p.Trim().ToUpper() == b.Place.Province.Trim().ToUpper()));
+                    models = models.AsEnumerable().Where(b => b.Place.Province != null && searchModel.Province.Any(p => p.Trim().ToUpper() == b.Place.Province.Trim().ToUpper())).AsQueryable();
                 }
                 if (searchModel.Forest)
                 {
@@ -39,9 +39,9 @@ namespace CampFinder.Managers
                 {
                     models = models.Where(b => !b.Place.Country.Trim().ToUpper().Contains("BELGI"));
                 }
-                if (searchModel.Accessibility > 0)
+                if (searchModel.MinimumScore > 0)
                 {
-                    models = models.Where(b => b.Place.Accessibility <= searchModel.Accessibility);
+                    models = models.ToList().Where(c => c.AverageScore >= searchModel.MinimumScore).AsQueryable();
                 }
             }
             return models;

@@ -21,16 +21,23 @@ namespace CampFinder.Models
         public virtual Place Place { get; set; }
         public virtual ICollection<Review> Reviews { get; set; }
 
-        public double GetAverageScore()
+        public double AverageScore
         {
-            if (Reviews.Count == 0)
-            {
-                return 0;
+            get{
+                return Reviews.Count == 0? 0: Reviews.AsEnumerable().Select(r => r.Score).Average(); 
             }
-            else
-            {
-                return Reviews.Select(r => r.Score).Average();
-            }                       
         }
+
+        //public double GetAverageScore()
+        //{
+        //    if (Reviews.Count == 0)
+        //    {
+        //        return 0;
+        //    }
+        //    else
+        //    {
+        //        return Reviews.AsEnumerable().Select(r => r.Score).Average();
+        //    }                       
+        //}
     }
 }

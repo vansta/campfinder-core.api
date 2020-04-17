@@ -11,6 +11,6 @@ namespace CampFinder.ViewModels
         public IEnumerable<string> Province { get; set; }
         public bool Foreign { get; set; }
         public bool Forest { get; set; }
-        public double Accessibility { get; set; }
+        public double MinimumScore  { get;set; } 
     }
 }
