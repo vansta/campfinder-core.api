@@ -43,6 +43,10 @@ namespace CampFinder.Managers
                 {
                     models = models.ToList().Where(c => c.AverageScore >= searchModel.MinimumScore).AsQueryable();
                 }
+                if (searchModel.Accessibility > 0)
+                {
+                    models = models.Where(c => c.Place.Accessibility <= searchModel.Accessibility);
+                }
             }
             return models;
         }

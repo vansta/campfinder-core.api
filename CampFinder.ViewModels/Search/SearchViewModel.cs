@@ -12,5 +12,7 @@ namespace CampFinder.ViewModels
         public bool Foreign { get; set; }
         public bool Forest { get; set; }
         public double MinimumScore  { get;set; } 
+        public double Accessibility { get; set; }
+        public string AccessibilityNote { get; set; }
     }
 }
