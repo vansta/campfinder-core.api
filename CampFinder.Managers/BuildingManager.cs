@@ -103,5 +103,18 @@ namespace CampFinder.Managers
                 return null;
             }
         }
+
+        public void UpdateBuilding(BuildingViewModel buildingViewModel)
+        {
+            try
+            {
+                Building building = MapViewModelToModel(buildingViewModel);
+                repository.UpdateCampPlace(building);
+            }
+            catch (Exception ex)
+            {
+                LogErrors(ex);
+            }
+        }
     }
 }

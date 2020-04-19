@@ -95,24 +95,17 @@ namespace CampFinder.Managers
             }
         }
 
-        #region Mapper
-
-        private Terrain MapViewModelToTerrain(TerrainViewModel terrainViewModel)
+        public void UpdateTerrain(TerrainViewModel terrainViewModel)
         {
-            Terrain terrain = new MapperService<Terrain>().Map(terrainViewModel);
-            terrain.Person = terrainViewModel.Person == null ? null : new MapperService<Person>().Map(terrainViewModel.Person);
-            terrain.Place = terrainViewModel.Place == null ? null : new MapperService<Place>().Map(terrainViewModel.Place);
-            return terrain;
+            try
+            {
+                Terrain terrain = MapViewModelToModel(terrainViewModel);
+                repository.UpdateCampPlace(terrain);
+            }
+            catch(Exception ex)
+            {
+                LogErrors(ex);
+            }
         }
-
-        private TerrainViewModel MapTerrainToViewModel(Terrain terrain)
-        {
-            TerrainViewModel terrainViewModel = new MapperService<TerrainViewModel>().Map(terrain);
-            terrainViewModel.Person = terrain.Person == null ? null : new MapperService<PersonViewModel>().Map(terrain.Person);
-            terrainViewModel.Place = terrain.Place == null ? null : new MapperService<PlaceViewModel>().Map(terrain.Place);
-            return terrainViewModel;
-        }
-
-        #endregion Mapper
     }
 }

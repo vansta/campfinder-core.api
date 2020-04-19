@@ -38,8 +38,16 @@ namespace CampFinder_Core.Api.Controllers
         [HttpPost]
         public void PostNewBuilding([FromBody] BuildingViewModel building)
         {
-            Log.Information($"building posted: {building}");
-            manager.PostNewBuilding(building);
+            if (building.Id == Guid.Empty)
+            {
+                Log.Information($"Building posted: {building}");
+                manager.PostNewBuilding(building);
+            }
+            else
+            {
+                Log.Information($"Building updated: {building}");
+                manager.UpdateBuilding(building);
+            }
         }
 
         

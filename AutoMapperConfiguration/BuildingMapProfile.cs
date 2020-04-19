@@ -19,7 +19,7 @@ namespace CampFinder.AutoMapperConfiguration
                 .ForMember(dest => dest.Person, opt => opt.Ignore());
 
             CreateMap<BuildingViewModel, Building>()
-                .ForMember(dest => dest.Id, opt => opt.MapFrom(src => Guid.NewGuid()))
+                .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id == Guid.Empty? Guid.NewGuid() : src.Id))
                 .ForMember(dest => dest.AmountPersons, opt => opt.MapFrom(src => int.Parse(src.AmountPersons)))
                 .ForMember(dest => dest.Dormitories, opt => opt.MapFrom(src => int.Parse(src.Dormitories)))
                 .ForMember(dest => dest.DaySpaces, opt => opt.MapFrom(src => int.Parse(src.DaySpaces)))

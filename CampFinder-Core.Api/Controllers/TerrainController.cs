@@ -35,8 +35,16 @@ namespace CampFinder_Core.Api.Controllers
         [HttpPost]
         public void PostNewTerrain([FromBody] TerrainViewModel terrain)
         {
-            Log.Information($"terrain posted: {terrain}");
-            manager.PostNewTerrain(terrain);
+            if (terrain.Id == Guid.Empty)
+            {
+                Log.Information($"terrain posted: {terrain}");
+                manager.PostNewTerrain(terrain);
+            }
+            else
+            {
+                Log.Information($"Terrain updated: {terrain}");
+                manager.UpdateTerrain(terrain);
+            }
         }
 
         [HttpPost("search")]
