@@ -13,19 +13,6 @@ namespace CampFinder.Managers
     {
         private readonly CampPlaceRepository repository = new CampPlaceRepository();
 
-        public IEnumerable<Building> GetBuildings()
-        {
-            try
-            {
-                return repository.Get<Building>();
-            }
-            catch(Exception ex)
-            {
-                LogErrors(ex);
-                return null;
-            }
-        }
-
         public IEnumerable<BuildingOverviewItemViewModel> GetBuildingOverview()
         {
             try
@@ -101,6 +88,19 @@ namespace CampFinder.Managers
             {
                 LogErrors(ex);
                 return null;
+            }
+        }
+
+        public void UpdateBuilding(BuildingViewModel buildingViewModel)
+        {
+            try
+            {
+                Building building = MapViewModelToModel(buildingViewModel);
+                repository.UpdateCampPlace(building);
+            }
+            catch (Exception ex)
+            {
+                LogErrors(ex);
             }
         }
     }

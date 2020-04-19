@@ -12,7 +12,7 @@ namespace CampFinder.AutoMapperConfiguration
         public PlaceMapProfile()
         {
             CreateMap<PlaceViewModel, Place>()
-                .ForMember(dest => dest.Id, opt => opt.MapFrom(src => Guid.NewGuid()));
+                .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id == Guid.Empty ? Guid.NewGuid() : src.Id));
 
             CreateMap<Place, PlaceViewModel>();
         }

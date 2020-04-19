@@ -27,9 +27,31 @@ namespace CampFinder.Repositories
 
         public void PostNew<T>(T campPlace) where T : CampPlace
         {
-            CampFinderDbContext dbContext = new CampFinderDbContext();
-            using var transaction = dbContext.Database.BeginTransactionAsync();
             context.Set<T>().Add(campPlace);
+            context.SaveChanges();
+        }
+
+        public void UpdateCampPlace<T>(T campPlace) where T : CampPlace
+        {
+            context.Set<T>().Update(campPlace);
+            context.SaveChanges();
+        }
+
+        public void Delete<T>(T campPlace) where T : CampPlace
+        {
+            context.Set<T>().Remove(campPlace);
+            context.SaveChanges();
+        }
+
+        public void DeletePerson(Person person)
+        {
+            context.People.Remove(person);
+            context.SaveChangesAsync();
+        }
+
+        public void DeletePlace(Place place)
+        {
+            context.Places.Remove(place);
             context.SaveChangesAsync();
         }
     }

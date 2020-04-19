@@ -14,7 +14,7 @@ namespace CampFinder.AutoMapperConfiguration
             CreateMap<Person, PersonViewModel>();
 
             CreateMap<PersonViewModel, Person>()
-                .ForMember(dest => dest.Id, opt => opt.MapFrom(src => Guid.NewGuid()));
+                .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id == Guid.Empty ? Guid.NewGuid() : src.Id));
         }
     }
 }

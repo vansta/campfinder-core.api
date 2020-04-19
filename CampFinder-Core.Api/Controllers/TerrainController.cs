@@ -35,15 +35,30 @@ namespace CampFinder_Core.Api.Controllers
         [HttpPost]
         public void PostNewTerrain([FromBody] TerrainViewModel terrain)
         {
-            Log.Information($"terrain posted: {terrain}");
-            manager.PostNewTerrain(terrain);
+            if (terrain.Id == Guid.Empty)
+            {
+                Log.Information($"terrain posted: {terrain.Name}");
+                manager.PostNewTerrain(terrain);
+            }
+            else
+            {
+                Log.Information($"Terrain updated: {terrain.Name}");
+                manager.UpdateTerrain(terrain);
+            }
         }
 
         [HttpPost("search")]
         public JsonResult PostTerrainSearch([FromBody] TerrainSearchViewModel terrainSearch)
         {
-            Log.Information($"terrain search: {terrainSearch}");
             return Json(manager.GetTerrainsForSearch(terrainSearch));
+        }
+
+        [HttpDelete("delete")]
+        public JsonResult DeleteTerrain(Guid id)
+        {
+            Log.Information($"Removing {id}");
+            manager.Delete<Terrain>(id);
+            return Json(null);
         }
     }
 }
