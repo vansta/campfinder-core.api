@@ -13,6 +13,7 @@ namespace CampFinder.Managers
     public abstract class CampPlaceManager<DomainModel> where DomainModel : CampPlace
     {
         private readonly CampPlaceRepository repository = new CampPlaceRepository();
+        private readonly ReviewRepository reviewRepository = new ReviewRepository();
 
         internal IQueryable<DomainModel> GetSearch(SearchViewModel searchModel)
         {
@@ -50,6 +51,22 @@ namespace CampFinder.Managers
                 }
             }
             return models;
+        }
+
+        public void Delete<T>(Guid id) where T : CampPlace
+        {
+            try
+            {
+                T campPlace = repository.GetById<T>(id);
+                repository.Delete<T>(campPlace);
+                repository.DeletePerson(campPlace.Person);
+                repository.DeletePlace(campPlace.Place);
+                reviewRepository.Delete(campPlace.Reviews);
+            }
+            catch(Exception ex)
+            {
+                LogErrors(ex);
+            }
         }
 
         #region Mappers

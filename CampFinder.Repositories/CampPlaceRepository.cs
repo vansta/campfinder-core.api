@@ -36,5 +36,23 @@ namespace CampFinder.Repositories
             context.Set<T>().Update(campPlace);
             context.SaveChanges();
         }
+
+        public void Delete<T>(T campPlace) where T : CampPlace
+        {
+            context.Set<T>().Remove(campPlace);
+            context.SaveChanges();
+        }
+
+        public void DeletePerson(Person person)
+        {
+            context.People.Remove(person);
+            context.SaveChangesAsync();
+        }
+
+        public void DeletePlace(Place place)
+        {
+            context.Places.Remove(place);
+            context.SaveChangesAsync();
+        }
     }
 }

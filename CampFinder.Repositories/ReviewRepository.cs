@@ -20,5 +20,11 @@ namespace CampFinder.Repositories
             context.Reviews.Add(review);
             context.SaveChangesAsync();
         }
+
+        public void Delete(IEnumerable<Review> reviews)
+        {
+            context.Reviews.RemoveRange(reviews);
+            context.SaveChangesAsync();
+        }
     }
 }

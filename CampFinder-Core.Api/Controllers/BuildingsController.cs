@@ -17,15 +17,14 @@ namespace CampFinder_Core.Api.Controllers
     public class BuildingsController : Controller
     {
         private readonly BuildingManager manager = new BuildingManager();
-
-        //[EnableCors]
-        //[HttpGet("all")]
-        //public JsonResult GetBuildings()
-        //{
-        //    return Json(manager.GetBuildingOverview());
-        //}
-
         
+        [HttpGet("all")]
+        public JsonResult GetBuildings()
+        {
+            return Json(manager.GetBuildingOverview());
+        }
+
+
         [HttpGet]
         public JsonResult GetBuildingById(Guid id)
         {
@@ -51,8 +50,7 @@ namespace CampFinder_Core.Api.Controllers
         }
 
         
-        [HttpPost]
-        [Route("search")]
+        [HttpPost("search")]
         public JsonResult PostBuildingSearch([FromBody] BuildingSearchViewModel building)
         {
             Log.Information($"building search: {building}");
@@ -60,6 +58,14 @@ namespace CampFinder_Core.Api.Controllers
                 return Json(manager.PostBuildingSearch(building));
             else
                 return Json(manager.GetBuildingOverview());
+        }
+
+        [HttpDelete("delete")]
+        public JsonResult DeleteBuilding(Guid id)
+        {
+            Log.Information($"Removing {id}");
+            manager.Delete<Terrain>(id);
+            return Json(null);
         }
     }
 }

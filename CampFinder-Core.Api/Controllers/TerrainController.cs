@@ -53,5 +53,13 @@ namespace CampFinder_Core.Api.Controllers
             Log.Information($"terrain search: {terrainSearch}");
             return Json(manager.GetTerrainsForSearch(terrainSearch));
         }
+
+        [HttpDelete("delete")]
+        public JsonResult DeleteTerrain(Guid id)
+        {
+            Log.Information($"Removing {id}");
+            manager.Delete<Building>(id);
+            return Json(null);
+        }
     }
 }

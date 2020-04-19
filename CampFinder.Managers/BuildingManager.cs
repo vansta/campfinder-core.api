@@ -13,19 +13,6 @@ namespace CampFinder.Managers
     {
         private readonly CampPlaceRepository repository = new CampPlaceRepository();
 
-        public IEnumerable<Building> GetBuildings()
-        {
-            try
-            {
-                return repository.Get<Building>();
-            }
-            catch(Exception ex)
-            {
-                LogErrors(ex);
-                return null;
-            }
-        }
-
         public IEnumerable<BuildingOverviewItemViewModel> GetBuildingOverview()
         {
             try
