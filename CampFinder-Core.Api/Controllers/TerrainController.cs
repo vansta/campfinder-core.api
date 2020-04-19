@@ -37,12 +37,12 @@ namespace CampFinder_Core.Api.Controllers
         {
             if (terrain.Id == Guid.Empty)
             {
-                Log.Information($"terrain posted: {terrain}");
+                Log.Information($"terrain posted: {terrain.Name}");
                 manager.PostNewTerrain(terrain);
             }
             else
             {
-                Log.Information($"Terrain updated: {terrain}");
+                Log.Information($"Terrain updated: {terrain.Name}");
                 manager.UpdateTerrain(terrain);
             }
         }
@@ -50,7 +50,6 @@ namespace CampFinder_Core.Api.Controllers
         [HttpPost("search")]
         public JsonResult PostTerrainSearch([FromBody] TerrainSearchViewModel terrainSearch)
         {
-            Log.Information($"terrain search: {terrainSearch}");
             return Json(manager.GetTerrainsForSearch(terrainSearch));
         }
 
@@ -58,7 +57,7 @@ namespace CampFinder_Core.Api.Controllers
         public JsonResult DeleteTerrain(Guid id)
         {
             Log.Information($"Removing {id}");
-            manager.Delete<Building>(id);
+            manager.Delete<Terrain>(id);
             return Json(null);
         }
     }

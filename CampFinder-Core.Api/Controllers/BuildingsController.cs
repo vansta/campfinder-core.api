@@ -39,12 +39,12 @@ namespace CampFinder_Core.Api.Controllers
         {
             if (building.Id == Guid.Empty)
             {
-                Log.Information($"Building posted: {building}");
+                Log.Information($"Building posted: {building.Name}");
                 manager.PostNewBuilding(building);
             }
             else
             {
-                Log.Information($"Building updated: {building}");
+                Log.Information($"Building updated: {building.Name}");
                 manager.UpdateBuilding(building);
             }
         }
@@ -53,7 +53,6 @@ namespace CampFinder_Core.Api.Controllers
         [HttpPost("search")]
         public JsonResult PostBuildingSearch([FromBody] BuildingSearchViewModel building)
         {
-            Log.Information($"building search: {building}");
             if (building != null)
                 return Json(manager.PostBuildingSearch(building));
             else
@@ -64,7 +63,7 @@ namespace CampFinder_Core.Api.Controllers
         public JsonResult DeleteBuilding(Guid id)
         {
             Log.Information($"Removing {id}");
-            manager.Delete<Terrain>(id);
+            manager.Delete<Building>(id);
             return Json(null);
         }
     }

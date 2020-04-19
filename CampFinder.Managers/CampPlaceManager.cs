@@ -19,37 +19,45 @@ namespace CampFinder.Managers
         {
             IQueryable<DomainModel> models = repository.Get<DomainModel>();
 
-            if (searchModel != null)
+            try
             {
-                if (!string.IsNullOrEmpty(searchModel.Name))
+                if (searchModel != null)
                 {
-                    models = models.Where(b => b.Name.Contains(searchModel.Name));
-                }
-                if (searchModel.AmountPersons != null && int.TryParse(searchModel.AmountPersons, out int amountPersons))
-                {
-                    models = models.Where(b => b.AmountPersons >= amountPersons);
-                }
-                if (searchModel.Province != null && searchModel.Province.Count() > 0)
-                {
-                    models = models.AsEnumerable().Where(b => b.Place.Province != null && searchModel.Province.Any(p => p.Trim().ToUpper() == b.Place.Province.Trim().ToUpper())).AsQueryable();
-                }
-                if (searchModel.Forest)
-                {
-                    models = models.Where(b => b.Forest);
-                }
-                if (searchModel.Foreign)
-                {
-                    models = models.Where(b => !b.Place.Country.Trim().ToUpper().Contains("BELGI"));
-                }
-                if (searchModel.MinimumScore > 0)
-                {
-                    models = models.ToList().Where(c => c.AverageScore >= searchModel.MinimumScore).AsQueryable();
-                }
-                if (searchModel.Accessibility > 0)
-                {
-                    models = models.Where(c => c.Place.Accessibility <= searchModel.Accessibility);
+                    if (!string.IsNullOrEmpty(searchModel.Name))
+                    {
+                        models = models.Where(b => b.Name.Contains(searchModel.Name));
+                    }
+                    if (searchModel.AmountPersons != null && int.TryParse(searchModel.AmountPersons, out int amountPersons))
+                    {
+                        models = models.Where(b => b.AmountPersons >= amountPersons);
+                    }
+                    if (searchModel.Province != null && searchModel.Province.Count() > 0)
+                    {
+                        models = models.AsEnumerable().Where(b => b.Place.Province != null && searchModel.Province.Any(p => p.Trim().ToUpper() == b.Place.Province.Trim().ToUpper())).AsQueryable();
+                    }
+                    if (searchModel.Forest)
+                    {
+                        models = models.Where(b => b.Forest);
+                    }
+                    if (searchModel.Foreign)
+                    {
+                        models = models.Where(b => !b.Place.Country.Trim().ToUpper().Contains("BELGI"));
+                    }
+                    if (searchModel.MinimumScore > 0)
+                    {
+                        models = models.ToList().Where(c => c.AverageScore >= searchModel.MinimumScore).AsQueryable();
+                    }
+                    if (searchModel.Accessibility > 0)
+                    {
+                        models = models.Where(c => c.Place.Accessibility <= searchModel.Accessibility);
+                    }
                 }
             }
+            catch(Exception ex)
+            {
+                LogErrors(ex);
+            }
+
             return models;
         }
 
