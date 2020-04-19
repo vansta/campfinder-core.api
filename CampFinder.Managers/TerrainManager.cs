@@ -14,19 +14,35 @@ namespace CampFinder.Managers
 
         public IEnumerable<TerrainOverviewItemViewModel> GetTerrainViewModels()
         {
-            IEnumerable<Terrain> terrains = repository.Get<Terrain>();
-            List<TerrainOverviewItemViewModel> terrainViewModels = new List<TerrainOverviewItemViewModel>();
-            foreach (Terrain terrain in terrains)
+            try
             {
-                terrainViewModels.Add(new MapperService<TerrainOverviewItemViewModel>().Map(terrain));
+                IEnumerable<Terrain> terrains = repository.Get<Terrain>();
+                List<TerrainOverviewItemViewModel> terrainViewModels = new List<TerrainOverviewItemViewModel>();
+                foreach (Terrain terrain in terrains)
+                {
+                    terrainViewModels.Add(new MapperService<TerrainOverviewItemViewModel>().Map(terrain));
+                }
+                return terrainViewModels;
             }
-            return terrainViewModels;
+            catch(Exception ex)
+            {
+                LogErrors(ex);
+                return null;
+            }
         }
 
         public TerrainViewModel GetTerrainViewModel(Guid Id)
         {
-            Terrain terrain = repository.GetById<Terrain>(Id);
-            return MapModelToViewModel<TerrainViewModel>(terrain);
+            try
+            {
+                Terrain terrain = repository.GetById<Terrain>(Id);
+                return MapModelToViewModel<TerrainViewModel>(terrain);
+            }
+            catch(Exception ex)
+            {
+                LogErrors(ex);
+                return null;
+            }
         }
 
         public IEnumerable<TerrainOverviewItemViewModel> GetTerrainsForSearch(TerrainSearchViewModel terrainSearch)
@@ -34,36 +50,49 @@ namespace CampFinder.Managers
             List<TerrainOverviewItemViewModel> filteredTerrains = new List<TerrainOverviewItemViewModel>();
 
             IQueryable<Terrain> terrains = new List<Terrain>().AsQueryable();
-
-            if (terrainSearch != null)
+            try
             {
-                terrains = GetSearch(terrainSearch);
+                if (terrainSearch != null)
+                {
+                    terrains = GetSearch(terrainSearch);
 
-                if (terrainSearch.Toilets)
-                {
-                    terrains = terrains.Where(t => t.Toilets);
+                    if (terrainSearch.Toilets)
+                    {
+                        terrains = terrains.Where(t => t.Toilets);
+                    }
+                    if (terrainSearch.Water)
+                    {
+                        terrains = terrains.Where(t => t.Water);
+                    }
+                    if (terrainSearch.Electricity)
+                    {
+                        terrains = terrains.Where(t => t.Electricity);
+                    }
                 }
-                if (terrainSearch.Water)
+
+                foreach (Terrain terrain in terrains)
                 {
-                    terrains = terrains.Where(t => t.Water);
-                }
-                if (terrainSearch.Electricity)
-                {
-                    terrains = terrains.Where(t => t.Electricity);
+                    filteredTerrains.Add(new MapperService<TerrainOverviewItemViewModel>().Map(terrain));
                 }
             }
-
-            foreach (Terrain terrain in terrains)
+            catch(Exception ex)
             {
-                filteredTerrains.Add(new MapperService<TerrainOverviewItemViewModel>().Map(terrain));
+                LogErrors(ex);
             }
             return filteredTerrains;
         }
 
         public void PostNewTerrain(TerrainViewModel terrainViewModel)
         {
-            Terrain terrain = MapViewModelToModel(terrainViewModel);
-            repository.PostNew(terrain);
+            try
+            {
+                Terrain terrain = MapViewModelToModel(terrainViewModel);
+                repository.PostNew(terrain);
+            }
+            catch(Exception ex)
+            {
+                LogErrors(ex);
+            }
         }
 
         #region Mapper

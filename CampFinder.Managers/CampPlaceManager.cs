@@ -6,6 +6,7 @@ using CampFinder.AutoMapperConfiguration;
 using CampFinder.Models;
 using CampFinder.Repositories;
 using CampFinder.ViewModels;
+using Serilog;
 
 namespace CampFinder.Managers
 {
@@ -70,5 +71,17 @@ namespace CampFinder.Managers
         }
 
         #endregion Mappers
+
+
+        internal void LogErrors(Exception ex)
+        {
+            Exception innerException = ex;
+            while (innerException != null)
+            {
+                Log.Error(innerException.Message);
+                Log.Error(innerException.StackTrace);
+                innerException = innerException.InnerException;
+            }
+        }
     }
 }
