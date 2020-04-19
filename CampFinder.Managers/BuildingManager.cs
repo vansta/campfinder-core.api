@@ -5,6 +5,7 @@ using CampFinder.AutoMapperConfiguration;
 using CampFinder.Models;
 using CampFinder.Repositories;
 using CampFinder.ViewModels;
+using Serilog;
 
 namespace CampFinder.Managers
 {
@@ -14,56 +15,93 @@ namespace CampFinder.Managers
 
         public IEnumerable<Building> GetBuildings()
         {
-            return repository.Get<Building>();
+            try
+            {
+                return repository.Get<Building>();
+            }
+            catch(Exception ex)
+            {
+                LogErrors(ex);
+                return null;
+            }
         }
 
         public IEnumerable<BuildingOverviewItemViewModel> GetBuildingOverview()
         {
-            IEnumerable<Building> Buildings = repository.Get<Building>();
-            List<BuildingOverviewItemViewModel> BuildingOverview = new List<BuildingOverviewItemViewModel>();
-            foreach (Building building in Buildings)
+            try
             {
-                BuildingOverview.Add(new MapperService<BuildingOverviewItemViewModel>().Map(building));
+                IEnumerable<Building> Buildings = repository.Get<Building>();
+                List<BuildingOverviewItemViewModel> BuildingOverview = new List<BuildingOverviewItemViewModel>();
+                foreach (Building building in Buildings)
+                {
+                    BuildingOverview.Add(new MapperService<BuildingOverviewItemViewModel>().Map(building));
+                }
+                return BuildingOverview;
             }
-            return BuildingOverview;
+            catch(Exception ex)
+            {
+                LogErrors(ex);
+                return null;
+            }
         }
 
         public void PostNewBuilding(BuildingViewModel buildingViewModel)
         {
-            Building building = MapViewModelToModel(buildingViewModel);
-            repository.PostNew(building);
+            try
+            {
+                Building building = MapViewModelToModel(buildingViewModel);
+                repository.PostNew(building);
+            }
+            catch(Exception ex)
+            {
+                LogErrors(ex);
+            }
         }
 
         public IEnumerable<BuildingOverviewItemViewModel> PostBuildingSearch(BuildingSearchViewModel buildingSearch)
         {
             List<BuildingOverviewItemViewModel> filteredBuildings = new List<BuildingOverviewItemViewModel>();
             IQueryable<Building> buildings = new List<Building>().AsQueryable();
-
-            if (buildingSearch != null)
+            try
             {
-                buildings = GetSearch(buildingSearch);
-                if (buildingSearch.Beds)
+                if (buildingSearch != null)
                 {
-                    buildings = buildings.Where(b => b.Beds);
+                    buildings = GetSearch(buildingSearch);
+                    if (buildingSearch.Beds)
+                    {
+                        buildings = buildings.Where(b => b.Beds);
+                    }
+                    if (buildingSearch.KitchenGear)
+                    {
+                        buildings = buildings.Where(b => b.KitchenGear);
+                    }
                 }
-                if (buildingSearch.KitchenGear)
+
+                foreach (Building building in buildings)
                 {
-                    buildings = buildings.Where(b => b.KitchenGear);
+                    filteredBuildings.Add(new MapperService<BuildingOverviewItemViewModel>().Map(building));
                 }
             }
-
-            foreach (Building building in buildings)
+            catch(Exception ex)
             {
-                filteredBuildings.Add(new MapperService<BuildingOverviewItemViewModel>().Map(building));
+                LogErrors(ex);
             }
             return filteredBuildings;
         }
 
         public BuildingViewModel GetBuildingViewModel(Guid Id)
         {
-            Building building = repository.GetById<Building>(Id);
-            BuildingViewModel buildingViewModel = MapModelToViewModel<BuildingViewModel>(building);
-            return buildingViewModel;
+            try
+            {
+                Building building = repository.GetById<Building>(Id);
+                BuildingViewModel buildingViewModel = MapModelToViewModel<BuildingViewModel>(building);
+                return buildingViewModel;
+            }
+            catch(Exception ex)
+            {
+                LogErrors(ex);
+                return null;
+            }
         }
     }
 }
