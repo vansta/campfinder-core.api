@@ -13,52 +13,83 @@ namespace CampFinder_Core.Api.Controllers
 {
     [Produces("application/json")]
     [Route("api/terrain")]
-    public class TerrainController : Controller
+    public class TerrainController : ControllerBase
     {
         private readonly TerrainManager manager = new TerrainManager();
 
         [HttpGet("all")]
-        public JsonResult GetTerrains()
+        public IActionResult GetTerrains()
         {
-            Log.Information("Get all terrains");
-            return Json(manager.GetTerrainViewModels());
+            try
+            {
+                Log.Information("Get all terrains");
+                return Ok(manager.GetTerrainViewModels());
+            }
+            catch (Exception ex)
+            {
+                return BadRequest($"Could not get terrains: {ex.Message}");
+            }
         }
 
         [HttpGet]
-        public JsonResult GetTerrainById(Guid id)
+        public IActionResult GetTerrainById(Guid id)
         {
-            Log.Information($"Get terrain {id.ToString()}");
-            TerrainViewModel terrain = manager.GetTerrainViewModel(id);
-            return Json(terrain);
+            try
+            {
+                Log.Information($"Get terrain {id.ToString()}");
+                TerrainViewModel terrain = manager.GetTerrainViewModel(id);
+                return Ok(terrain);
+            }
+            catch (Exception ex)
+            {
+                return NotFound(ex.Message);
+            }
         }
 
         [HttpPost]
-        public void PostNewTerrain([FromBody] TerrainViewModel terrain)
+        public IActionResult PostNewTerrain([FromBody] TerrainViewModel terrain)
         {
-            if (terrain.Id == Guid.Empty)
+            try
             {
-                Log.Information($"terrain posted: {terrain.Name}");
-                manager.PostNewTerrain(terrain);
+                if (terrain.Id == Guid.Empty)
+                {
+                    Log.Information($"terrain posted: {terrain.Name}");
+                    manager.PostNewTerrain(terrain);
+                    return Ok($"Terrein {terrain.Name} aangemaakt");
+                }
+                else
+                {
+                    Log.Information($"Terrain updated: {terrain.Name}");
+                    manager.UpdateTerrain(terrain);
+                    return Ok($"Terrein {terrain.Name} aangepast");
+                }
             }
-            else
+            catch (Exception ex)
             {
-                Log.Information($"Terrain updated: {terrain.Name}");
-                manager.UpdateTerrain(terrain);
+                return BadRequest(ex.Message);
             }
         }
 
         [HttpPost("search")]
-        public JsonResult PostTerrainSearch([FromBody] TerrainSearchViewModel terrainSearch)
+        public IActionResult PostTerrainSearch([FromBody] TerrainSearchViewModel terrainSearch)
         {
-            return Json(manager.GetTerrainsForSearch(terrainSearch));
+            return Ok(manager.GetTerrainsForSearch(terrainSearch));
         }
 
         [HttpDelete("delete")]
-        public JsonResult DeleteTerrain(Guid id)
+        public IActionResult DeleteTerrain(Guid id)
         {
-            Log.Information($"Removing {id}");
-            manager.Delete<Terrain>(id);
-            return Json(null);
+            string response;
+            try
+            {
+                Log.Information($"Removing {id}");
+                response = manager.Delete<Terrain>(id);
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }            
         }
     }
 }
