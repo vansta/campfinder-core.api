@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using CampFinder.AutoMapperConfiguration;
 using CampFinder.Models;
 using CampFinder.Repositories;
 using CampFinder.ViewModels;
-using Serilog;
 
 namespace CampFinder.Managers
 {
@@ -21,14 +19,14 @@ namespace CampFinder.Managers
                 List<BuildingOverviewItemViewModel> BuildingOverview = new List<BuildingOverviewItemViewModel>();
                 foreach (Building building in Buildings)
                 {
-                    BuildingOverview.Add(new MapperService<BuildingOverviewItemViewModel>().Map(building));
+                    BuildingOverview.Add(mapper.Map<BuildingOverviewItemViewModel>(building));
                 }
                 return BuildingOverview;
             }
             catch(Exception ex)
             {
                 LogErrors(ex);
-                return null;
+                throw ex;
             }
         }
 
@@ -42,6 +40,7 @@ namespace CampFinder.Managers
             catch(Exception ex)
             {
                 LogErrors(ex);
+                throw ex;
             }
         }
 
@@ -66,12 +65,13 @@ namespace CampFinder.Managers
 
                 foreach (Building building in buildings)
                 {
-                    filteredBuildings.Add(new MapperService<BuildingOverviewItemViewModel>().Map(building));
+                    filteredBuildings.Add(mapper.Map<BuildingOverviewItemViewModel>(building));
                 }
             }
             catch(Exception ex)
             {
                 LogErrors(ex);
+                throw ex;
             }
             return filteredBuildings;
         }
@@ -87,7 +87,7 @@ namespace CampFinder.Managers
             catch(Exception ex)
             {
                 LogErrors(ex);
-                return null;
+                throw ex;
             }
         }
 
@@ -101,6 +101,7 @@ namespace CampFinder.Managers
             catch (Exception ex)
             {
                 LogErrors(ex);
+                throw ex;
             }
         }
     }

@@ -3,26 +3,32 @@ using CampFinder.Repositories;
 using CampFinder.ViewModels;
 using System;
 using System.Collections.Generic;
-using System.Text;
-using CampFinder.AutoMapperConfiguration;
 
 namespace CampFinder.Managers
 {
-    public class ReviewManager
+    public class ReviewManager : BaseManager
     {
         private readonly ReviewRepository repository = new ReviewRepository();
         public IEnumerable<ReviewViewModel> GetReviewsById(Guid id)
         {
             IEnumerable<Review> reviews = repository.GetReviewsById(id);
-            List<ReviewViewModel> reviewViewModels = new MapperService<List<ReviewViewModel>>().Map(reviews);
+            List<ReviewViewModel> reviewViewModels = mapper.Map<List<ReviewViewModel>>(reviews);
             return reviewViewModels;
         }
 
         public ReviewViewModel PostNewReview(ReviewViewModel reviewViewModel)
         {
-            Review review = new MapperService<Review>().Map(reviewViewModel);
-            repository.PostnewReview(review);
-            return new MapperService<ReviewViewModel>().Map(review);
+            try
+            {
+                Review review = mapper.Map<Review>(reviewViewModel);
+                repository.PostnewReview(review);
+                return mapper.Map<ReviewViewModel>(review);
+            }
+            catch(Exception ex)
+            {
+                LogErrors(ex);
+                throw ex;
+            }
         }
     }
 }
