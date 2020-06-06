@@ -61,7 +61,7 @@ namespace CampFinder_Core.Api.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest($"{building.Name} kon niet worden aangepast of aangemaakt");
+                return BadRequest($"{building.Name} kon niet worden aangepast of aangemaakt: {ex.Message}");
             }
         }
 
