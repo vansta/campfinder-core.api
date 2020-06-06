@@ -14,57 +14,88 @@ using Serilog;
 namespace CampFinder_Core.Api.Controllers
 {
     [Route("api/building")]
-    public class BuildingsController : Controller
+    public class BuildingsController : ControllerBase
     {
         private readonly BuildingManager manager = new BuildingManager();
         
         [HttpGet("all")]
-        public JsonResult GetBuildings()
+        public IActionResult GetBuildings()
         {
-            return Json(manager.GetBuildingOverview());
+            return Ok(manager.GetBuildingOverview());
         }
 
 
         [HttpGet]
-        public JsonResult GetBuildingById(Guid id)
+        public IActionResult GetBuildingById(Guid id)
         {
-            Log.Information($"Get building {id.ToString()}");
-            BuildingViewModel building = manager.GetBuildingViewModel(id);
-            return Json(building);
+            try
+            {
+                Log.Information($"Get building {id.ToString()}");
+                BuildingViewModel building = manager.GetBuildingViewModel(id);
+                return Ok(building);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         
         [HttpPost]
-        public void PostNewBuilding([FromBody] BuildingViewModel building)
+        public IActionResult PostNewBuilding([FromBody] BuildingViewModel building)
         {
-            if (building.Id == Guid.Empty)
+            try
             {
-                Log.Information($"Building posted: {building.Name}");
-                manager.PostNewBuilding(building);
+                if (building.Id == Guid.Empty)
+                {
+                    Log.Information($"Building posted: {building.Name}");
+                    manager.PostNewBuilding(building);
+                    return Ok($"Gebouw {building.Name} is aangemaakt");
+                }
+                else
+                {
+                    Log.Information($"Building updated: {building.Name}");
+                    manager.UpdateBuilding(building);
+                    return Ok($"Gebouw {building.Name} is aangepast");
+                }
             }
-            else
+            catch (Exception ex)
             {
-                Log.Information($"Building updated: {building.Name}");
-                manager.UpdateBuilding(building);
+                return BadRequest($"{building.Name} kon niet worden aangepast of aangemaakt: {ex.Message}");
             }
         }
 
         
         [HttpPost("search")]
-        public JsonResult PostBuildingSearch([FromBody] BuildingSearchViewModel building)
+        public IActionResult PostBuildingSearch([FromBody] BuildingSearchViewModel building)
         {
-            if (building != null)
-                return Json(manager.PostBuildingSearch(building));
-            else
-                return Json(manager.GetBuildingOverview());
+            try
+            {
+                if (building != null)
+                    return Ok(manager.PostBuildingSearch(building));
+                else
+                    return Ok(manager.GetBuildingOverview());
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpDelete("delete")]
-        public JsonResult DeleteBuilding(Guid id)
+        public IActionResult DeleteBuilding(Guid id)
         {
             Log.Information($"Removing {id}");
-            manager.Delete<Building>(id);
-            return Json(null);
+            string respons;
+            try
+            {
+                respons = manager.Delete<Building>(id);
+                return Ok(respons);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
     }
 }

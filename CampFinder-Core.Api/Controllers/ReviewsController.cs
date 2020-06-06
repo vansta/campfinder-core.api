@@ -12,22 +12,36 @@ namespace CampFinder_Core.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ReviewsController : Controller
+    public class ReviewsController : ControllerBase
     {
         private readonly ReviewManager manager = new ReviewManager();
         [HttpGet]
-        public JsonResult GetReviewsById(Guid id)
+        public IActionResult GetReviewsById(Guid id)
         {
-            Log.Information($"Get reviews {id.ToString()}");
-            IEnumerable<ReviewViewModel> reviews = manager.GetReviewsById(id);
-            return Json(reviews);
+            try
+            {
+                Log.Information($"Get reviews {id.ToString()}");
+                IEnumerable<ReviewViewModel> reviews = manager.GetReviewsById(id);
+                return Ok(reviews);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest($"Kon review niet ophalen: {ex.Message}");
+            }
         }
 
         [HttpPost]
-        public JsonResult PostnewReview([FromBody] ReviewViewModel review)
+        public IActionResult PostnewReview([FromBody] ReviewViewModel review)
         {
-            Log.Information($"Post review");
-            return Json(manager.PostNewReview(review));
+            try
+            {
+                Log.Information($"Post review");
+                return Ok(manager.PostNewReview(review));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest($"Kon review niet aanmaken: {ex.Message}");
+            }
         }
     }
 }

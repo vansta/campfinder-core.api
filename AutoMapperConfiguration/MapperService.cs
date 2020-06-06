@@ -5,7 +5,7 @@ using AutoMapper;
 
 namespace CampFinder.AutoMapperConfiguration
 {
-    public class MapperService<T>
+    public class MapperService
     {
         private readonly static MapperConfiguration mapperConfiguration;
         static MapperService()
@@ -23,9 +23,14 @@ namespace CampFinder.AutoMapperConfiguration
             });
         }
 
-        public T Map(object src)
+        public static Mapper Initialize()
         {
-            return new Mapper(mapperConfiguration).Map<T>(src);
+            return new Mapper(mapperConfiguration);
         }
+
+        //public T Map(object src)
+        //{
+        //    return new Mapper(mapperConfiguration).Map<T>(src);
+        //}
     }
 }

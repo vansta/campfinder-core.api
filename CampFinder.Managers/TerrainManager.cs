@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using CampFinder.AutoMapperConfiguration;
 using CampFinder.Models;
 using CampFinder.Repositories;
 using CampFinder.ViewModels;
@@ -20,14 +19,14 @@ namespace CampFinder.Managers
                 List<TerrainOverviewItemViewModel> terrainViewModels = new List<TerrainOverviewItemViewModel>();
                 foreach (Terrain terrain in terrains)
                 {
-                    terrainViewModels.Add(new MapperService<TerrainOverviewItemViewModel>().Map(terrain));
+                    terrainViewModels.Add(mapper.Map<TerrainOverviewItemViewModel>(terrain));
                 }
                 return terrainViewModels;
             }
             catch(Exception ex)
             {
                 LogErrors(ex);
-                return null;
+                throw ex;
             }
         }
 
@@ -41,7 +40,7 @@ namespace CampFinder.Managers
             catch(Exception ex)
             {
                 LogErrors(ex);
-                return null;
+                throw ex;
             }
         }
 
@@ -72,12 +71,13 @@ namespace CampFinder.Managers
 
                 foreach (Terrain terrain in terrains)
                 {
-                    filteredTerrains.Add(new MapperService<TerrainOverviewItemViewModel>().Map(terrain));
+                    filteredTerrains.Add(mapper.Map<TerrainOverviewItemViewModel>(terrain));
                 }
             }
             catch(Exception ex)
             {
                 LogErrors(ex);
+                throw ex;
             }
             return filteredTerrains;
         }
@@ -92,6 +92,7 @@ namespace CampFinder.Managers
             catch(Exception ex)
             {
                 LogErrors(ex);
+                throw ex;
             }
         }
 
@@ -105,6 +106,7 @@ namespace CampFinder.Managers
             catch(Exception ex)
             {
                 LogErrors(ex);
+                throw ex;
             }
         }
     }

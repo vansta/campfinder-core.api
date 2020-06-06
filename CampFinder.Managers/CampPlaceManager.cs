@@ -1,16 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using CampFinder.AutoMapperConfiguration;
 using CampFinder.Models;
 using CampFinder.Repositories;
 using CampFinder.ViewModels;
-using Serilog;
 
 namespace CampFinder.Managers
 {
-    public abstract class CampPlaceManager<DomainModel> where DomainModel : CampPlace
+    public abstract class CampPlaceManager<DomainModel> : BaseManager where DomainModel : CampPlace
     {
         private readonly CampPlaceRepository repository = new CampPlaceRepository();
         private readonly ReviewRepository reviewRepository = new ReviewRepository();
@@ -61,19 +57,23 @@ namespace CampFinder.Managers
             return models;
         }
 
-        public void Delete<T>(Guid id) where T : CampPlace
+        public string Delete<T>(Guid id) where T : CampPlace, new()
         {
+            T campPlace = new T();
             try
             {
-                T campPlace = repository.GetById<T>(id);
+                campPlace = repository.GetById<T>(id);
                 repository.Delete<T>(campPlace);
                 repository.DeletePerson(campPlace.Person);
                 repository.DeletePlace(campPlace.Place);
                 reviewRepository.Delete(campPlace.Reviews);
+
+                return $"{campPlace.Name} has been deleted";
             }
             catch(Exception ex)
             {
                 LogErrors(ex);
+                throw new Exception($"Failed to delete {campPlace.Name}: {ex.Message}");
             }
         }
 
@@ -81,32 +81,20 @@ namespace CampFinder.Managers
 
         internal DomainModel MapViewModelToModel<ViewModel>(ViewModel viewModel) where ViewModel: CampPlaceViewModel
         {
-            DomainModel model = new MapperService<DomainModel>().Map(viewModel);
-            model.Person = viewModel.Person == null ? null : new MapperService<Person>().Map(viewModel.Person);
-            model.Place = viewModel.Place == null ? null : new MapperService<Place>().Map(viewModel.Place);
+            DomainModel model = mapper.Map<DomainModel>(viewModel);
+            model.Person = viewModel.Person == null ? null : mapper.Map<Person>(viewModel.Person);
+            model.Place = viewModel.Place == null ? null : mapper.Map<Place>(viewModel.Place);
             return model;
         }
 
         internal ViewModel MapModelToViewModel<ViewModel>(DomainModel model) where ViewModel : CampPlaceViewModel
         {
-            ViewModel viewModel = new MapperService<ViewModel>().Map(model);
-            viewModel.Person = model.Person == null ? null : new MapperService<PersonViewModel>().Map(model.Person);
-            viewModel.Place = model.Place == null ? null : new MapperService<PlaceViewModel>().Map(model.Place);
+            ViewModel viewModel = mapper.Map<ViewModel>(model);
+            viewModel.Person = model.Person == null ? null : mapper.Map<PersonViewModel>(model.Person);
+            viewModel.Place = model.Place == null ? null : mapper.Map<PlaceViewModel>(model.Place);
             return viewModel;
         }
 
-        #endregion Mappers
-
-
-        internal void LogErrors(Exception ex)
-        {
-            Exception innerException = ex;
-            while (innerException != null)
-            {
-                Log.Error(innerException.Message);
-                Log.Error(innerException.StackTrace);
-                innerException = innerException.InnerException;
-            }
-        }
+        #endregion Mappers        
     }
 }
