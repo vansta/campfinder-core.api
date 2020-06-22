@@ -15,7 +15,12 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CampFinder.ViewModels", "Ca
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CampFinder.Managers", "CampFinder.Managers\CampFinder.Managers.csproj", "{4EE7FC6E-50F2-4EFE-8C92-1033EC360EA2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CampFinder.AutoMapperConfiguration", "AutoMapperConfiguration\CampFinder.AutoMapperConfiguration.csproj", "{C2FA3731-8741-43A2-A16E-78B0BB157F85}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CampFinder.AutoMapperConfiguration", "AutoMapperConfiguration\CampFinder.AutoMapperConfiguration.csproj", "{C2FA3731-8741-43A2-A16E-78B0BB157F85}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Migrations", "Migrations", "{A2A9B137-DFCA-4BB6-B81F-A3306B196E3D}"
+	ProjectSection(SolutionItems) = preProject
+		CampFinderDb.sql = CampFinderDb.sql
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
