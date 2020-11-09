@@ -63,7 +63,7 @@ namespace CampFinder.Managers
             try
             {
                 campPlace = repository.GetById<T>(id);
-                repository.Delete<T>(campPlace);
+                repository.Delete(campPlace);
                 repository.DeletePerson(campPlace.Person);
                 repository.DeletePlace(campPlace.Place);
                 reviewRepository.Delete(campPlace.Reviews);

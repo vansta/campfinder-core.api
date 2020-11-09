@@ -15,13 +15,7 @@ namespace CampFinder.Managers
         {
             try
             {
-                IEnumerable<Terrain> terrains = repository.Get<Terrain>();
-                List<TerrainOverviewItemViewModel> terrainViewModels = new List<TerrainOverviewItemViewModel>();
-                foreach (Terrain terrain in terrains)
-                {
-                    terrainViewModels.Add(mapper.Map<TerrainOverviewItemViewModel>(terrain));
-                }
-                return terrainViewModels;
+                return repository.Get<Terrain>().Select(t => mapper.Map<TerrainOverviewItemViewModel>(t));
             }
             catch(Exception ex)
             {
@@ -46,8 +40,6 @@ namespace CampFinder.Managers
 
         public IEnumerable<TerrainOverviewItemViewModel> GetTerrainsForSearch(TerrainSearchViewModel terrainSearch)
         {
-            List<TerrainOverviewItemViewModel> filteredTerrains = new List<TerrainOverviewItemViewModel>();
-
             IQueryable<Terrain> terrains = new List<Terrain>().AsQueryable();
             try
             {
@@ -68,18 +60,13 @@ namespace CampFinder.Managers
                         terrains = terrains.Where(t => t.Electricity);
                     }
                 }
-
-                foreach (Terrain terrain in terrains)
-                {
-                    filteredTerrains.Add(mapper.Map<TerrainOverviewItemViewModel>(terrain));
-                }
             }
             catch(Exception ex)
             {
                 LogErrors(ex);
                 throw ex;
             }
-            return filteredTerrains;
+            return terrains.Select(t => mapper.Map<TerrainOverviewItemViewModel>(t));
         }
 
         public void PostNewTerrain(TerrainViewModel terrainViewModel)

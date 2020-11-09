@@ -3,6 +3,7 @@ using CampFinder.Repositories;
 using CampFinder.ViewModels;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace CampFinder.Managers
 {
@@ -11,9 +12,7 @@ namespace CampFinder.Managers
         private readonly ReviewRepository repository = new ReviewRepository();
         public IEnumerable<ReviewViewModel> GetReviewsById(Guid id)
         {
-            IEnumerable<Review> reviews = repository.GetReviewsById(id);
-            List<ReviewViewModel> reviewViewModels = mapper.Map<List<ReviewViewModel>>(reviews);
-            return reviewViewModels;
+            return repository.GetReviewsById(id).Select(r => mapper.Map<ReviewViewModel>(r));
         }
 
         public ReviewViewModel PostNewReview(ReviewViewModel reviewViewModel)
@@ -22,7 +21,7 @@ namespace CampFinder.Managers
             {
                 Review review = mapper.Map<Review>(reviewViewModel);
                 repository.PostnewReview(review);
-                return mapper.Map<ReviewViewModel>(review);
+                return reviewViewModel;
             }
             catch(Exception ex)
             {

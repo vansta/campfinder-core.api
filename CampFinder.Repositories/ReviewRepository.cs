@@ -10,7 +10,7 @@ namespace CampFinder.Repositories
     public class ReviewRepository
     {
         private readonly CampFinderDbContext context = new CampFinderDbContext();
-        public IEnumerable<Review> GetReviewsById(Guid id)
+        public IQueryable<Review> GetReviewsById(Guid id)
         {
             return context.Reviews.Where(r => r.CampPlaceId == id);
         }

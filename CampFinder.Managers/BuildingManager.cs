@@ -15,13 +15,7 @@ namespace CampFinder.Managers
         {
             try
             {
-                IEnumerable<Building> Buildings = repository.Get<Building>();
-                List<BuildingOverviewItemViewModel> BuildingOverview = new List<BuildingOverviewItemViewModel>();
-                foreach (Building building in Buildings)
-                {
-                    BuildingOverview.Add(mapper.Map<BuildingOverviewItemViewModel>(building));
-                }
-                return BuildingOverview;
+                return repository.Get<Building>().Select(b => mapper.Map<BuildingOverviewItemViewModel>(b));
             }
             catch(Exception ex)
             {
@@ -46,7 +40,6 @@ namespace CampFinder.Managers
 
         public IEnumerable<BuildingOverviewItemViewModel> PostBuildingSearch(BuildingSearchViewModel buildingSearch)
         {
-            List<BuildingOverviewItemViewModel> filteredBuildings = new List<BuildingOverviewItemViewModel>();
             IQueryable<Building> buildings = new List<Building>().AsQueryable();
             try
             {
@@ -62,18 +55,13 @@ namespace CampFinder.Managers
                         buildings = buildings.Where(b => b.KitchenGear);
                     }
                 }
-
-                foreach (Building building in buildings)
-                {
-                    filteredBuildings.Add(mapper.Map<BuildingOverviewItemViewModel>(building));
-                }
             }
             catch(Exception ex)
             {
                 LogErrors(ex);
                 throw ex;
             }
-            return filteredBuildings;
+            return buildings.Select(b => mapper.Map<BuildingOverviewItemViewModel>(b));
         }
 
         public BuildingViewModel GetBuildingViewModel(Guid Id)
@@ -81,8 +69,7 @@ namespace CampFinder.Managers
             try
             {
                 Building building = repository.GetById<Building>(Id);
-                BuildingViewModel buildingViewModel = MapModelToViewModel<BuildingViewModel>(building);
-                return buildingViewModel;
+                return MapModelToViewModel<BuildingViewModel>(building);
             }
             catch(Exception ex)
             {
