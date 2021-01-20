@@ -4,7 +4,7 @@ using System.Text;
 
 namespace CampFinder.ViewModels
 {
-    public abstract class CampPlaceViewModel
+    public class CampPlaceViewModel
     {
         public Guid Id { get; set; }
         public string Name { get; set; }

@@ -24,7 +24,12 @@ namespace CampFinder.Models
         public double AverageScore
         {
             get{
-                return Reviews.Count == 0? 0: Reviews.AsEnumerable().Select(r => r.Score).Average(); 
+                double averageScore = 0;
+                if (Reviews != null && Reviews.Count > 0)
+                {
+                    averageScore = Reviews.Select(r => r.Score).Average();
+                }
+                return averageScore;
             }
         }
 

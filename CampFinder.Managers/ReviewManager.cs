@@ -1,33 +1,33 @@
-﻿using CampFinder.Models;
-using CampFinder.Repositories;
+﻿using CampFinder.DbContext;
+using CampFinder.Models;
 using CampFinder.ViewModels;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace CampFinder.Managers
 {
     public class ReviewManager : BaseManager
     {
-        private readonly ReviewRepository repository = new ReviewRepository();
+        public ReviewManager(IConfiguration configuration) : base(configuration)
+        {
+
+        }
         public IEnumerable<ReviewViewModel> GetReviewsById(Guid id)
         {
-            return repository.GetReviewsById(id).Select(r => mapper.Map<ReviewViewModel>(r));
+            using CampFinderDbContext context = dbContextFactory.CreateDbContext();
+            return context.Reviews.Where(r => r.CampPlaceId.Equals(id)).Select(r => mapper.Map<ReviewViewModel>(r)).ToList();
         }
 
-        public ReviewViewModel PostNewReview(ReviewViewModel reviewViewModel)
+        public async Task<ReviewViewModel> PostNewReview(ReviewViewModel reviewViewModel)
         {
-            try
-            {
-                Review review = mapper.Map<Review>(reviewViewModel);
-                repository.PostnewReview(review);
-                return reviewViewModel;
-            }
-            catch(Exception ex)
-            {
-                LogErrors(ex);
-                throw ex;
-            }
+            Review review = mapper.Map<Review>(reviewViewModel);
+            using CampFinderDbContext context = dbContextFactory.CreateDbContext();
+            review = (await context.Reviews.AddAsync(review)).Entity;
+            await context.SaveChangesAsync();
+            return mapper.Map<ReviewViewModel>(review);
         }
     }
 }

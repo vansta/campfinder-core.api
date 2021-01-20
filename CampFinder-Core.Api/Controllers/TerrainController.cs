@@ -8,86 +8,84 @@ using CampFinder.Managers;
 using Microsoft.AspNetCore.Cors;
 using CampFinder.ViewModels;
 using Serilog;
+using Microsoft.Extensions.Configuration;
 
 namespace CampFinder_Core.Api.Controllers
 {
     [Produces("application/json")]
     [Route("api/terrain")]
-    public class TerrainController : ControllerBase
+    public class TerrainController : BaseController
     {
-        private readonly TerrainManager manager = new TerrainManager();
-
-        [HttpGet("all")]
-        public IActionResult GetTerrains()
+        private readonly TerrainManager manager;// = new TerrainManager();
+        public TerrainController(IConfiguration configuration)
         {
-            try
-            {
-                Log.Information("Get all terrains");
-                return Ok(manager.GetTerrainViewModels());
-            }
-            catch (Exception ex)
-            {
-                return BadRequest($"Could not get terrains: {ex.Message}");
-            }
+            manager = new TerrainManager(configuration);
         }
 
         [HttpGet]
-        public IActionResult GetTerrainById(Guid id)
+        public async Task<IActionResult> GetTerrainById(Guid id)
         {
             try
             {
-                Log.Information($"Get terrain {id.ToString()}");
-                TerrainViewModel terrain = manager.GetTerrainViewModel(id);
+                Log.Information($"Get terrain {id}");
+                TerrainViewModel terrain = await manager.GetTerrainViewModel(id);
                 return Ok(terrain);
             }
             catch (Exception ex)
             {
+                LogErrors(ex);
                 return NotFound(ex.Message);
             }
         }
 
+        [HttpGet("search")]
+        public IActionResult GetTerrainSearch([FromQuery] TerrainSearchViewModel terrainSearch)
+        {
+            return Ok(manager.GetTerrainsForSearch(terrainSearch));
+        }
+
         [HttpPost]
-        public IActionResult PostNewTerrain([FromBody] TerrainViewModel terrain)
+        public async Task<IActionResult> PostNewTerrain([FromBody] TerrainViewModel terrain)
         {
             try
             {
                 if (terrain.Id == Guid.Empty)
                 {
                     Log.Information($"terrain posted: {terrain.Name}");
-                    manager.PostNewTerrain(terrain);
+                    await manager.PostNewTerrain(terrain);
                     return Ok($"Terrein {terrain.Name} aangemaakt");
                 }
                 else
                 {
                     Log.Information($"Terrain updated: {terrain.Name}");
-                    manager.UpdateTerrain(terrain);
+                    await manager.UpdateTerrain(terrain);
                     return Ok($"Terrein {terrain.Name} aangepast");
                 }
             }
             catch (Exception ex)
             {
+                LogErrors(ex);
                 return BadRequest(ex.Message);
             }
         }
 
-        [HttpPost("search")]
-        public IActionResult PostTerrainSearch([FromBody] TerrainSearchViewModel terrainSearch)
-        {
-            return Ok(manager.GetTerrainsForSearch(terrainSearch));
-        }
+        //[HttpPost("search")]
+        //public IActionResult PostTerrainSearch([FromBody] TerrainSearchViewModel terrainSearch)
+        //{
+        //    return Ok(manager.GetTerrainsForSearch(terrainSearch));
+        //}
 
         [HttpDelete("delete")]
-        public IActionResult DeleteTerrain(Guid id)
+        public async Task<IActionResult> DeleteTerrain(Guid id)
         {
-            string response;
             try
             {
                 Log.Information($"Removing {id}");
-                response = manager.Delete<Terrain>(id);
-                return Ok(response);
+                return Ok(await manager.Delete<Terrain>(id));
             }
             catch (Exception ex)
             {
+                LogErrors(ex);
                 return BadRequest(ex.Message);
             }            
         }

@@ -6,6 +6,7 @@ using CampFinder.Managers;
 using CampFinder.ViewModels;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using Serilog;
 
 namespace CampFinder_Core.Api.Controllers
@@ -14,15 +15,18 @@ namespace CampFinder_Core.Api.Controllers
     [ApiController]
     public class ReviewsController : ControllerBase
     {
-        private readonly ReviewManager manager = new ReviewManager();
+        private readonly ReviewManager manager;// = new ReviewManager();
+        public ReviewsController(IConfiguration configuration)
+        {
+            manager = new ReviewManager(configuration);
+        }
         [HttpGet]
         public IActionResult GetReviewsById(Guid id)
         {
             try
             {
-                Log.Information($"Get reviews {id.ToString()}");
-                IEnumerable<ReviewViewModel> reviews = manager.GetReviewsById(id);
-                return Ok(reviews);
+                Log.Information($"Get reviews {id}");
+                return Ok(manager.GetReviewsById(id));
             }
             catch (Exception ex)
             {
@@ -31,12 +35,12 @@ namespace CampFinder_Core.Api.Controllers
         }
 
         [HttpPost]
-        public IActionResult PostnewReview([FromBody] ReviewViewModel review)
+        public async Task<IActionResult> PostnewReview([FromBody] ReviewViewModel review)
         {
             try
             {
                 Log.Information($"Post review");
-                return Ok(manager.PostNewReview(review));
+                return Ok(await manager.PostNewReview(review));
             }
             catch (Exception ex)
             {
