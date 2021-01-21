@@ -1,113 +1,71 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
+using CampFinder.DbContext;
 using CampFinder.Models;
-using CampFinder.Repositories;
 using CampFinder.ViewModels;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 
 namespace CampFinder.Managers
 {
-    public class TerrainManager: CampPlaceManager<Terrain>
+    public class TerrainManager : CampPlaceManager<Terrain>
     {
-        private readonly CampPlaceRepository repository = new CampPlaceRepository();
-
-        public IEnumerable<TerrainOverviewItemViewModel> GetTerrainViewModels()
+        public TerrainManager(IConfiguration configuration) : base(configuration)
         {
-            try
-            {
-                IEnumerable<Terrain> terrains = repository.Get<Terrain>();
-                List<TerrainOverviewItemViewModel> terrainViewModels = new List<TerrainOverviewItemViewModel>();
-                foreach (Terrain terrain in terrains)
-                {
-                    terrainViewModels.Add(mapper.Map<TerrainOverviewItemViewModel>(terrain));
-                }
-                return terrainViewModels;
-            }
-            catch(Exception ex)
-            {
-                LogErrors(ex);
-                throw ex;
-            }
+
         }
 
-        public TerrainViewModel GetTerrainViewModel(Guid Id)
+        public async Task<TerrainViewModel> GetTerrainViewModel(Guid id)
         {
-            try
-            {
-                Terrain terrain = repository.GetById<Terrain>(Id);
-                return MapModelToViewModel<TerrainViewModel>(terrain);
-            }
-            catch(Exception ex)
-            {
-                LogErrors(ex);
-                throw ex;
-            }
+            using CampFinderDbContext context = dbContextFactory.CreateDbContext();
+            return mapper.Map<TerrainViewModel>(await context.Terrains
+                .Include(b => b.Person)
+                .Include(b => b.Reviews)
+                .Include(b => b.Place)
+                .SingleAsync(t => t.Id.Equals(id)));
         }
 
         public IEnumerable<TerrainOverviewItemViewModel> GetTerrainsForSearch(TerrainSearchViewModel terrainSearch)
         {
-            List<TerrainOverviewItemViewModel> filteredTerrains = new List<TerrainOverviewItemViewModel>();
+            using CampFinderDbContext context = dbContextFactory.CreateDbContext();
+            IQueryable<Terrain> terrains = context.Terrains
+                .Include(t => t.Reviews)
+                .Include(t => t.Place);
 
-            IQueryable<Terrain> terrains = new List<Terrain>().AsQueryable();
-            try
+            if (terrainSearch != null)
             {
-                if (terrainSearch != null)
-                {
-                    terrains = GetSearch(terrainSearch);
+                terrains = GetSearch(terrains, terrainSearch);
 
-                    if (terrainSearch.Toilets)
-                    {
-                        terrains = terrains.Where(t => t.Toilets);
-                    }
-                    if (terrainSearch.Water)
-                    {
-                        terrains = terrains.Where(t => t.Water);
-                    }
-                    if (terrainSearch.Electricity)
-                    {
-                        terrains = terrains.Where(t => t.Electricity);
-                    }
+                if (terrainSearch.Toilets)
+                {
+                    terrains = terrains.Where(t => t.Toilets);
                 }
-
-                foreach (Terrain terrain in terrains)
+                if (terrainSearch.Water)
                 {
-                    filteredTerrains.Add(mapper.Map<TerrainOverviewItemViewModel>(terrain));
+                    terrains = terrains.Where(t => t.Water);
+                }
+                if (terrainSearch.Electricity)
+                {
+                    terrains = terrains.Where(t => t.Electricity);
                 }
             }
-            catch(Exception ex)
-            {
-                LogErrors(ex);
-                throw ex;
-            }
-            return filteredTerrains;
+            return terrains.Select(t => mapper.Map<TerrainOverviewItemViewModel>(t)).ToList();
         }
 
-        public void PostNewTerrain(TerrainViewModel terrainViewModel)
+        public async Task PostNewTerrain(TerrainViewModel terrainViewModel)
         {
-            try
-            {
-                Terrain terrain = MapViewModelToModel(terrainViewModel);
-                repository.PostNew(terrain);
-            }
-            catch(Exception ex)
-            {
-                LogErrors(ex);
-                throw ex;
-            }
+            using CampFinderDbContext context = dbContextFactory.CreateDbContext();
+            await context.Terrains.AddAsync(mapper.Map<Terrain>(terrainViewModel));
+            await context.SaveChangesAsync();
         }
 
-        public void UpdateTerrain(TerrainViewModel terrainViewModel)
+        public async Task UpdateTerrain(TerrainViewModel terrainViewModel)
         {
-            try
-            {
-                Terrain terrain = MapViewModelToModel(terrainViewModel);
-                repository.UpdateCampPlace(terrain);
-            }
-            catch(Exception ex)
-            {
-                LogErrors(ex);
-                throw ex;
-            }
+            using CampFinderDbContext context = dbContextFactory.CreateDbContext();
+            context.Terrains.Update(mapper.Map<Terrain>(terrainViewModel));
+            await context.SaveChangesAsync();
         }
     }
 }

@@ -18,7 +18,8 @@ namespace CampFinder.AutoMapperConfiguration
                     typeof(BuildingMapProfile),
                     typeof(TerrainMapProfile),
                     typeof(PlaceMapProfile),
-                    typeof(PersonMapProfile)
+                    typeof(PersonMapProfile),
+                    typeof(CampPlaceMapProfile)
                 });
             });
         }

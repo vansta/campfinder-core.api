@@ -1,108 +1,69 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
+using CampFinder.DbContext;
 using CampFinder.Models;
-using CampFinder.Repositories;
 using CampFinder.ViewModels;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 
 namespace CampFinder.Managers
 {
-    public class BuildingManager: CampPlaceManager<Building>
+    public class BuildingManager : CampPlaceManager<Building>
     {
-        private readonly CampPlaceRepository repository = new CampPlaceRepository();
-
-        public IEnumerable<BuildingOverviewItemViewModel> GetBuildingOverview()
+        public BuildingManager(IConfiguration configuration) : base(configuration)
         {
-            try
+            
+        }
+
+        public async Task PostNewBuilding(BuildingViewModel buildingViewModel)
+        {
+            using CampFinderDbContext context = dbContextFactory.CreateDbContext();
+            await context.Buildings.AddAsync(mapper.Map<Building>(buildingViewModel));
+            await context.SaveChangesAsync();
+        }
+
+        public IEnumerable<BuildingOverviewItemViewModel> GetBuildingSearch(BuildingSearchViewModel buildingSearch)
+        {
+            using CampFinderDbContext context = dbContextFactory.CreateDbContext();
+            IQueryable<Building> buildings = context.Buildings
+                .Include(t => t.Reviews)
+                .Include(t => t.Place);
+
+            if (buildingSearch != null)
             {
-                IEnumerable<Building> Buildings = repository.Get<Building>();
-                List<BuildingOverviewItemViewModel> BuildingOverview = new List<BuildingOverviewItemViewModel>();
-                foreach (Building building in Buildings)
+                buildings = GetSearch(buildings, buildingSearch);
+                if (buildingSearch.Beds)
                 {
-                    BuildingOverview.Add(mapper.Map<BuildingOverviewItemViewModel>(building));
+                    buildings = buildings.Where(b => b.Beds);
                 }
-                return BuildingOverview;
-            }
-            catch(Exception ex)
-            {
-                LogErrors(ex);
-                throw ex;
-            }
-        }
-
-        public void PostNewBuilding(BuildingViewModel buildingViewModel)
-        {
-            try
-            {
-                Building building = MapViewModelToModel(buildingViewModel);
-                repository.PostNew(building);
-            }
-            catch(Exception ex)
-            {
-                LogErrors(ex);
-                throw ex;
-            }
-        }
-
-        public IEnumerable<BuildingOverviewItemViewModel> PostBuildingSearch(BuildingSearchViewModel buildingSearch)
-        {
-            List<BuildingOverviewItemViewModel> filteredBuildings = new List<BuildingOverviewItemViewModel>();
-            IQueryable<Building> buildings = new List<Building>().AsQueryable();
-            try
-            {
-                if (buildingSearch != null)
+                if (buildingSearch.KitchenGear)
                 {
-                    buildings = GetSearch(buildingSearch);
-                    if (buildingSearch.Beds)
-                    {
-                        buildings = buildings.Where(b => b.Beds);
-                    }
-                    if (buildingSearch.KitchenGear)
-                    {
-                        buildings = buildings.Where(b => b.KitchenGear);
-                    }
+                    buildings = buildings.Where(b => b.KitchenGear);
                 }
 
-                foreach (Building building in buildings)
-                {
-                    filteredBuildings.Add(mapper.Map<BuildingOverviewItemViewModel>(building));
-                }
             }
-            catch(Exception ex)
-            {
-                LogErrors(ex);
-                throw ex;
-            }
-            return filteredBuildings;
+            return buildings.Select(b => mapper.Map<BuildingOverviewItemViewModel>(b)).ToList();
         }
 
-        public BuildingViewModel GetBuildingViewModel(Guid Id)
+        public async Task<BuildingViewModel> GetBuildingViewModel(Guid id)
         {
-            try
-            {
-                Building building = repository.GetById<Building>(Id);
-                BuildingViewModel buildingViewModel = MapModelToViewModel<BuildingViewModel>(building);
-                return buildingViewModel;
-            }
-            catch(Exception ex)
-            {
-                LogErrors(ex);
-                throw ex;
-            }
+            using CampFinderDbContext context = dbContextFactory.CreateDbContext();
+            Building building = await context.Buildings
+                .Include(b => b.Person)
+                .Include(b => b.Reviews)
+                .Include(b => b.Place)
+                .SingleAsync(b => b.Id.Equals(id));
+
+            return mapper.Map<BuildingViewModel>(building);
         }
 
-        public void UpdateBuilding(BuildingViewModel buildingViewModel)
+        public async Task UpdateBuilding(BuildingViewModel buildingViewModel)
         {
-            try
-            {
-                Building building = MapViewModelToModel(buildingViewModel);
-                repository.UpdateCampPlace(building);
-            }
-            catch (Exception ex)
-            {
-                LogErrors(ex);
-                throw ex;
-            }
+            using CampFinderDbContext context = dbContextFactory.CreateDbContext();
+            context.Buildings.Update(mapper.Map<Building>(buildingViewModel));
+            await context.SaveChangesAsync();
         }
     }
 }

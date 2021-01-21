@@ -7,15 +7,18 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CampFinder-Core.Api", "Camp
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CampFinder.Models", "CampFinder.Models\CampFinder.Models.csproj", "{251D80C9-C808-4ADB-AB16-20D90B272B69}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CampFinder.Repositories", "CampFinder.Repositories\CampFinder.Repositories.csproj", "{DF5FF271-337F-491C-993E-A85B249CEC88}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CampFinder.DbContext", "CampFinder.DbContext\CampFinder.DbContext.csproj", "{FBB876A1-8490-4CDD-B104-B96D688BB9F3}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CampFinder.ViewModels", "CampFinder.ViewModels\CampFinder.ViewModels.csproj", "{8327E7AA-1EB4-4994-911C-CD60EDA0ED0F}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CampFinder.Managers", "CampFinder.Managers\CampFinder.Managers.csproj", "{4EE7FC6E-50F2-4EFE-8C92-1033EC360EA2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CampFinder.AutoMapperConfiguration", "AutoMapperConfiguration\CampFinder.AutoMapperConfiguration.csproj", "{C2FA3731-8741-43A2-A16E-78B0BB157F85}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CampFinder.AutoMapperConfiguration", "AutoMapperConfiguration\CampFinder.AutoMapperConfiguration.csproj", "{C2FA3731-8741-43A2-A16E-78B0BB157F85}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Migrations", "Migrations", "{A2A9B137-DFCA-4BB6-B81F-A3306B196E3D}"
+	ProjectSection(SolutionItems) = preProject
+		CampFinderDb.sql = CampFinderDb.sql
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -31,10 +34,6 @@ Global
 		{251D80C9-C808-4ADB-AB16-20D90B272B69}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{251D80C9-C808-4ADB-AB16-20D90B272B69}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{251D80C9-C808-4ADB-AB16-20D90B272B69}.Release|Any CPU.Build.0 = Release|Any CPU
-		{DF5FF271-337F-491C-993E-A85B249CEC88}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{DF5FF271-337F-491C-993E-A85B249CEC88}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{DF5FF271-337F-491C-993E-A85B249CEC88}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{DF5FF271-337F-491C-993E-A85B249CEC88}.Release|Any CPU.Build.0 = Release|Any CPU
 		{FBB876A1-8490-4CDD-B104-B96D688BB9F3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{FBB876A1-8490-4CDD-B104-B96D688BB9F3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FBB876A1-8490-4CDD-B104-B96D688BB9F3}.Release|Any CPU.ActiveCfg = Release|Any CPU

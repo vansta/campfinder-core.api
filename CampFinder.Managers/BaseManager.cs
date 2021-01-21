@@ -1,4 +1,6 @@
 ﻿using CampFinder.AutoMapperConfiguration;
+using CampFinder.DbContext;
+using Microsoft.Extensions.Configuration;
 using Serilog;
 using System;
 using System.Collections.Generic;
@@ -9,19 +11,11 @@ namespace CampFinder.Managers
     public abstract class BaseManager
     {
         internal AutoMapper.Mapper mapper;
-        internal BaseManager()
+        internal CampFinderDbContextFactory dbContextFactory;
+        internal BaseManager(IConfiguration configuration)
         {
             mapper = MapperService.Initialize();
-        }
-        internal void LogErrors(Exception ex)
-        {
-            Exception innerException = ex;
-            while (innerException != null)
-            {
-                Log.Error(innerException.Message);
-                Log.Error(innerException.StackTrace);
-                innerException = innerException.InnerException;
-            }
+            dbContextFactory = new CampFinderDbContextFactory(configuration);
         }
     }
 }
