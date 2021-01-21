@@ -39,6 +39,15 @@
         "ASPNETCORE_ENVIRONMENT": "Production"
       },
       "applicationUrl": "http://localhost:5000"
+    },
+    "Contabo": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "launchUrl": "api/terrain/search",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Production"
+      },
+      "applicationUrl": "http://localhost:5000"
     }
   }
 }
