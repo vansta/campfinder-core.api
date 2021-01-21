@@ -65,7 +65,7 @@ namespace CampFinder_Core.Api
 
             var log = new LoggerConfiguration()
                 //.WriteTo.File($"D:/Stan/Projecten/CampFinder/Logs/Campfinder-Api-{DateTime.Today.ToString("yyyyMMdd")}.txt")
-                .WriteTo.File(Path.Combine(Configuration.GetSection("LogFilePath").Value, $"Campfinder-Api-{DateTime.Today.ToString("yyyyMMdd")}.txt"))
+                .WriteTo.File(Path.Combine(Configuration.GetSection("LogFilePath").Value, $"Campfinder-Api-{DateTime.Today:yyyyMMdd}.txt"))
                 //.WriteTo.File($"/var/www/campfinder-api/logs/log.txt")
                 .CreateLogger();
             Log.Logger = log;

@@ -8,23 +8,13 @@ namespace CampFinder.DbContext
 {
     public class CampFinderDbContext : Microsoft.EntityFrameworkCore.DbContext
     {
-        private readonly string connectionString;
-        //public CampFinderDbContext()
-        //{
-        //    IConfigurationBuilder builder = new ConfigurationBuilder();
-        //    builder.AddJsonFile(Path.Combine(Directory.GetCurrentDirectory(), "appsettings.json"));
-
-        //    var root = builder.Build();
-        //    connectionString = root.GetConnectionString("CampFinderDb");
-        //}
-
         public CampFinderDbContext(DbContextOptions options) : base(options) { }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)
             {
-                optionsBuilder.UseSqlServer(connectionString);
+                optionsBuilder.UseSqlServer("Server=(localdb)\\mssqllocaldb;database=CampFinderDb;Initial Catalog=CampFinderDb;Integrated Security=true");
             }
         }
 
