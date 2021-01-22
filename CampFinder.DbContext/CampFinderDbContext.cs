@@ -14,7 +14,7 @@ namespace CampFinder.DbContext
         {
             if (!optionsBuilder.IsConfigured)
             {
-                optionsBuilder.UseSqlServer("Server=161.97.179.116;database=CampFinderDb;Initial Catalog=CampFinderDb;User Id=SA; Password=w1LLther*al5lim5hady");
+                optionsBuilder.UseSqlServer("");
             }
         }
 
