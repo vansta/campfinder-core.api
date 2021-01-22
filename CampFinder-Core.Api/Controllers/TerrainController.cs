@@ -16,7 +16,7 @@ namespace CampFinder_Core.Api.Controllers
     [Route("api/terrain")]
     public class TerrainController : BaseController
     {
-        private readonly TerrainManager manager;// = new TerrainManager();
+        private readonly TerrainManager manager;
         public TerrainController(IConfiguration configuration)
         {
             manager = new TerrainManager(configuration);
@@ -68,12 +68,6 @@ namespace CampFinder_Core.Api.Controllers
                 return BadRequest(ex.Message);
             }
         }
-
-        //[HttpPost("search")]
-        //public IActionResult PostTerrainSearch([FromBody] TerrainSearchViewModel terrainSearch)
-        //{
-        //    return Ok(manager.GetTerrainsForSearch(terrainSearch));
-        //}
 
         [HttpDelete("delete")]
         public async Task<IActionResult> DeleteTerrain(Guid id)

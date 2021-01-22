@@ -21,20 +21,6 @@ namespace CampFinder.DbContext
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-
-            //modelBuilder.Entity<Terrain>(entity =>
-            //{
-            //    entity.HasOne(t => t.Place);
-            //    entity.HasOne(t => t.Person);
-            //    entity.HasMany(t => t.Reviews);
-            //});
-
-            //modelBuilder.Entity<Building>(entity =>
-            //{
-            //    entity.HasOne(b => b.Place);
-            //    entity.HasOne(b => b.Person);
-            //    entity.HasMany(b => b.Reviews);
-            //});
         }
 
         public DbSet<Place> Places { get; set; }
