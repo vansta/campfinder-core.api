@@ -14,7 +14,7 @@ namespace CampFinder.DbContext
         {
             if (!optionsBuilder.IsConfigured)
             {
-                optionsBuilder.UseSqlServer("Server=(localdb)\\mssqllocaldb;database=CampFinderDb;Initial Catalog=CampFinderDb;Integrated Security=true");
+                optionsBuilder.UseSqlServer("Server=161.97.179.116;database=CampFinderDb;Initial Catalog=CampFinderDb;User Id=SA; Password=w1LLther*al5lim5hady");
             }
         }
 
@@ -22,39 +22,19 @@ namespace CampFinder.DbContext
         {
             base.OnModelCreating(modelBuilder);
 
-            modelBuilder.Entity<CampPlace>(entity =>
-            {
-                entity.HasKey(c => c.Id);
-            });
+            //modelBuilder.Entity<Terrain>(entity =>
+            //{
+            //    entity.HasOne(t => t.Place);
+            //    entity.HasOne(t => t.Person);
+            //    entity.HasMany(t => t.Reviews);
+            //});
 
-            modelBuilder.Entity<Terrain>(entity =>
-            {
-                entity.HasOne(t => t.Place);
-                entity.HasOne(t => t.Person);
-                entity.HasMany(t => t.Reviews);
-            });
-
-            modelBuilder.Entity<Building>(entity =>
-            {
-                entity.HasOne(b => b.Place);
-                entity.HasOne(b => b.Person);
-                entity.HasMany(b => b.Reviews);
-            });
-
-            modelBuilder.Entity<Place>(entity =>
-            {
-                entity.HasKey(p => p.Id);
-            });
-
-            modelBuilder.Entity<Person>(entity =>
-            {
-                entity.HasKey(p => p.Id);
-            });
-
-            modelBuilder.Entity<Review>(entity =>
-            {
-                entity.HasKey(r => r.Id);
-            });
+            //modelBuilder.Entity<Building>(entity =>
+            //{
+            //    entity.HasOne(b => b.Place);
+            //    entity.HasOne(b => b.Person);
+            //    entity.HasMany(b => b.Reviews);
+            //});
         }
 
         public DbSet<Place> Places { get; set; }

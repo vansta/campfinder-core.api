@@ -33,7 +33,7 @@ namespace CampFinder.DbContext.Migrations
                     PostNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Province = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Country = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Accessibility = table.Column<double>(type: "float", nullable: false),
+                    Accessibility = table.Column<double>(type: "float", nullable: true),
                     AccessibilityNote = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
@@ -50,9 +50,9 @@ namespace CampFinder.DbContext.Migrations
                     Website = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     AmountPersons = table.Column<int>(type: "int", nullable: false),
                     Forest = table.Column<bool>(type: "bit", nullable: false),
-                    Area = table.Column<double>(type: "float", nullable: false),
-                    Person_Id = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    Place_Id = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    Area = table.Column<double>(type: "float", nullable: true),
+                    PersonId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    PlaceId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Discriminator = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Dormitories = table.Column<int>(type: "int", nullable: true),
                     KitchenGear = table.Column<bool>(type: "bit", nullable: true),
@@ -66,17 +66,17 @@ namespace CampFinder.DbContext.Migrations
                 {
                     table.PrimaryKey("PK_CampPlaces", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_CampPlaces_People_Person_Id",
-                        column: x => x.Person_Id,
+                        name: "FK_CampPlaces_People_PersonId",
+                        column: x => x.PersonId,
                         principalTable: "People",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_CampPlaces_Places_Place_Id",
-                        column: x => x.Place_Id,
+                        name: "FK_CampPlaces_Places_PlaceId",
+                        column: x => x.PlaceId,
                         principalTable: "Places",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -88,14 +88,14 @@ namespace CampFinder.DbContext.Migrations
                     Note = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Date = table.Column<DateTime>(type: "datetime2", nullable: false),
                     PersonId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    CampPlace_Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                    CampPlaceId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Reviews", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Reviews_CampPlaces_CampPlace_Id",
-                        column: x => x.CampPlace_Id,
+                        name: "FK_Reviews_CampPlaces_CampPlaceId",
+                        column: x => x.CampPlaceId,
                         principalTable: "CampPlaces",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -108,19 +108,19 @@ namespace CampFinder.DbContext.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_CampPlaces_Person_Id",
+                name: "IX_CampPlaces_PersonId",
                 table: "CampPlaces",
-                column: "Person_Id");
+                column: "PersonId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_CampPlaces_Place_Id",
+                name: "IX_CampPlaces_PlaceId",
                 table: "CampPlaces",
-                column: "Place_Id");
+                column: "PlaceId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Reviews_CampPlace_Id",
+                name: "IX_Reviews_CampPlaceId",
                 table: "Reviews",
-                column: "CampPlace_Id");
+                column: "CampPlaceId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Reviews_PersonId",

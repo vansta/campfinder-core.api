@@ -28,7 +28,7 @@ namespace CampFinder.DbContext.Migrations
                     b.Property<int>("AmountPersons")
                         .HasColumnType("int");
 
-                    b.Property<double>("Area")
+                    b.Property<double?>("Area")
                         .HasColumnType("float");
 
                     b.Property<string>("Discriminator")
@@ -41,10 +41,10 @@ namespace CampFinder.DbContext.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid?>("Person_Id")
+                    b.Property<Guid>("PersonId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid?>("Place_Id")
+                    b.Property<Guid>("PlaceId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Website")
@@ -52,9 +52,9 @@ namespace CampFinder.DbContext.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("Person_Id");
+                    b.HasIndex("PersonId");
 
-                    b.HasIndex("Place_Id");
+                    b.HasIndex("PlaceId");
 
                     b.ToTable("CampPlaces");
 
@@ -90,7 +90,7 @@ namespace CampFinder.DbContext.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<double>("Accessibility")
+                    b.Property<double?>("Accessibility")
                         .HasColumnType("float");
 
                     b.Property<string>("AccessibilityNote")
@@ -126,8 +126,7 @@ namespace CampFinder.DbContext.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid>("CampPlaceId")
-                        .HasColumnType("uniqueidentifier")
-                        .HasColumnName("CampPlace_Id");
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("Date")
                         .HasColumnType("datetime2");
@@ -189,11 +188,15 @@ namespace CampFinder.DbContext.Migrations
                 {
                     b.HasOne("CampFinder.Models.Person", "Person")
                         .WithMany()
-                        .HasForeignKey("Person_Id");
+                        .HasForeignKey("PersonId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("CampFinder.Models.Place", "Place")
                         .WithMany()
-                        .HasForeignKey("Place_Id");
+                        .HasForeignKey("PlaceId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Person");
 

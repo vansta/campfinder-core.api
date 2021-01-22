@@ -13,11 +13,11 @@ namespace CampFinder.Models
         public string Website { get; set; }
         public int AmountPersons { get; set; }
         public bool Forest { get; set; }
-        public double Area { get; set; }
+        public double? Area { get; set; }
 
-        [ForeignKey("Person_Id")]
+        public Guid PersonId { get; set; }
         public virtual Person Person { get; set; }
-        [ForeignKey("Place_Id")]
+        public Guid PlaceId { get; set; }
         public virtual Place Place { get; set; }
         public virtual ICollection<Review> Reviews { get; set; }
 
@@ -32,17 +32,5 @@ namespace CampFinder.Models
                 return averageScore;
             }
         }
-
-        //public double GetAverageScore()
-        //{
-        //    if (Reviews.Count == 0)
-        //    {
-        //        return 0;
-        //    }
-        //    else
-        //    {
-        //        return Reviews.AsEnumerable().Select(r => r.Score).Average();
-        //    }                       
-        //}
     }
 }

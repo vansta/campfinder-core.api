@@ -12,9 +12,8 @@ namespace CampFinder.Models
         public string Note { get; set; }
         public DateTime Date { get; set; }
 
-
+        public Guid? PersonId { get; set; }
         public Person Person { get; set; }
-        [Column("CampPlace_Id")]
         public Guid CampPlaceId { get; set; }
         public CampPlace CampPlace { get; set; }
     }
