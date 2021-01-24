@@ -75,23 +75,6 @@ namespace CampFinder_Core.Api.Controllers
             }
         }
 
-        
-        //[HttpPost("search")]
-        //public async Task<IActionResult> PostBuildingSearch([FromBody] BuildingSearchViewModel building)
-        //{
-        //    try
-        //    {
-        //        if (building != null)
-        //            return Ok(await manager.PostBuildingSearch(building));
-        //        else
-        //            return Ok(await manager.GetBuildingOverview());
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return BadRequest(ex.Message);
-        //    }
-        //}
-
         [HttpDelete("delete")]
         public async Task<IActionResult> DeleteBuilding(Guid id)
         {
