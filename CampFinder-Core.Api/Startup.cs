@@ -32,7 +32,7 @@ namespace CampFinder_Core.Api
             services.AddCors();
             services.AddControllers();
 
-            services.AddDbContext<CampFinderDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("CampFinderDb")));
+            services.AddDbContext<CampFinderDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("CampFinderDb"), options => options.EnableRetryOnFailure()));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
