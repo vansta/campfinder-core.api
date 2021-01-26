@@ -17,7 +17,7 @@ namespace CampFinder.DbContext
         public CampFinderDbContext CreateDbContext()
         {
             DbContextOptionsBuilder<CampFinderDbContext> dbContextOptionsBuilder = new DbContextOptionsBuilder<CampFinderDbContext>()
-                .UseSqlServer(configuration.GetConnectionString("CampFinderDb"));
+                .UseSqlServer(configuration.GetConnectionString("CampFinderDb"), opt => opt.EnableRetryOnFailure());
 
             return new CampFinderDbContext(dbContextOptionsBuilder.Options);
         }
