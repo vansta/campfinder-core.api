@@ -46,6 +46,13 @@ namespace CampFinder_Core.Api.Controllers
             }
             catch (Exception ex)
             {
+                Exception innerException = ex;
+                while (innerException != null)
+                {
+                    Log.Error(innerException.Message);
+                    Log.Error(innerException.StackTrace);
+                    innerException = ex.InnerException;
+                }
                 return BadRequest(ex.Message);
             }
         }
